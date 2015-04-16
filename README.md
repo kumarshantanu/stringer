@@ -33,8 +33,8 @@ the remaining arguments.
 
 ```clojure
 (s/with-obj-str w
-  (.append "foo")
-  (.append 707))
+  (.append w "foo")
+  (.append w 707))
 => "foo707"
 ```
 
@@ -42,8 +42,8 @@ There are `append!` and `join!` macros to work with `StringBuilder`.
 
 ```clojure
 (s/with-obj-str w
-  (s/append! "foo" :bar 707 nil 'baz)
-  (s/join! ", " :quux :norf))
+  (s/append! w "foo" :bar 707 nil 'baz)
+  (s/join! w ", " :quux :norf))
 => "foo:bar707baz:quux, :norf"
 ```
 
