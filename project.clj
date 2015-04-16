@@ -14,7 +14,11 @@
                    :strcat :strcat
                    :strjoin :strjoin}
   :plugins [[lein-cascade "0.1.2"]]
-  :cascade {"test" [["with-profile" "c16,dev" "test"]
+  :cascade {"test" [["clean"]
+                    ["with-profile" "c16,dev" "test"]
+                    ["clean"]
                     ["with-profile" "c17,dev" "test"]]
-            "perf" [["with-profile" "c16,dev" "test" ":perf"]
+            "perf" [["clean"]
+                    ["with-profile" "c16,dev" "test" ":perf"]
+                    ["clean"]
                     ["with-profile" "c17,dev" "test" ":perf"]]})

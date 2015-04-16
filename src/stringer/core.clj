@@ -67,9 +67,12 @@
   (let [args (precompile args)]
     (cond
       (empty? args)          ""
-      (= 1 (count args))     (if (string? (first args))
-                               (first args)
-                               `(str ~(first args)))
+      (= 1 (count args))     (if (stringable? (first args))
+                               (str (first args))
+                               `(let [x# ~(first args)]
+                                  (if (nil? x#)
+                                    ""
+                                    (String/valueOf x#))))
       (string? (first args)) (let [w (gensym)]
                                `(with-obj-str [~(vary-meta w assoc :tag `java.lang.StringBuilder)
                                                (StringBuilder. ~(first args))]
@@ -95,5 +98,5 @@
   [delimiter & args]
   (let [delim (gensym)]
     `(let [~delim ~delimiter]
-       (strcat
+       (strcat-impl
          ~@(interpose delim args)))))
