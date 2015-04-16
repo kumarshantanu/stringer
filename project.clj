@@ -6,7 +6,7 @@
   :profiles {:dev {:dependencies [[criterium "0.4.3"]]}
              :c16 {:dependencies [[org.clojure/clojure "1.6.0"]]}
              :c17 {:dependencies [[org.clojure/clojure "1.7.0-beta1"]]}}
-  :jvm-opts ^:replace ["-server"]
+  :jvm-opts ^:replace ["-server" "-Xms2048m" "Xmx2048m"]
   :global-vars {*warn-on-reflection* true
                 *assert* true}
   :test-selectors {:default (complement :perf)
