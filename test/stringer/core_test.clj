@@ -4,7 +4,8 @@
             [clojure.string     :as t]
             [stringer.core      :as s]
             [stringer.test-data :as d]
-            [criterium.core     :as c]))
+            [criterium.core     :as c]
+            [clansi.core        :as a]))
 
 
 (defmacro measure
@@ -13,6 +14,30 @@
      (println "\n::::: Benchmarking" ~(pr-str expr))
      (let [result# (c/benchmark ~expr {})]
        [result# (with-out-str (c/report-result result#))])))
+
+
+(defn nix?
+  []
+  (let [os (t/lower-case (str (System/getProperty "os.name")))]
+    (some #(>= (.indexOf os ^String %) 0) ["mac" "linux" "unix"])))
+
+
+(defn colorize-slow
+  [slow-bench fast-bench text]
+  (if (nix?)
+    (if (>= (first (:mean slow-bench)) (first (:mean fast-bench)))
+     (a/style text :bg-red)
+     (a/style text :bg-white))
+    text))
+
+
+(defn colorize-fast
+  [slow-bench fast-bench text]
+  (if (nix?)
+    (if (>= (first (:mean slow-bench)) (first (:mean fast-bench)))
+     (a/style text :bg-white)
+     (a/style text :bg-red))
+    text))
 
 
 (defmacro compare-perf
@@ -25,8 +50,13 @@
              fast-label# ~(pr-str fast-expr)]
          (->> [slow-report# fast-report#]
            (map t/split-lines)
-           (apply map (fn [s# f# ] {slow-label# s# fast-label# f#}))
+           (apply map (fn [s# f# ] {slow-label# s#
+                                    fast-label# f#}))
            (pp/print-table [slow-label# fast-label#])))
+       (println "Mean execution time:"
+         (colorize-slow slow-bench# fast-bench# (str (first (:mean slow-bench#))))
+         " vs "
+         (colorize-fast slow-bench# fast-bench# (str (first (:mean fast-bench#)))))
        (is (>= (first (:mean slow-bench#))
              (first (:mean fast-bench#)))))))
 
