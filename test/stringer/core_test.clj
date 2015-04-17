@@ -99,34 +99,61 @@
     (is (= (str) (s/strcat)))))
 
 
-#_(deftest ^{:perf true :strcat true} test-strcat-perf
-   (testing "one-arg"
-     (compare-perf (str 34) (stringer.core/strcat 34))
-     (let [thirty-four 34]
-       (compare-perf (str thirty-four) (stringer.core/strcat thirty-four))))
-   (testing "small tokens"
-     (compare-perf (str "foo" "bar" "baz") (stringer.core/strcat "foo" "bar" "baz"))
-     (let [foo "foo" bar "bar" baz "baz"]
-       (compare-perf (str foo bar baz) (stringer.core/strcat foo bar baz))))
-   (testing "various tokens"
-     (compare-perf (str 34 :er nil \- "foo") (stringer.core/strcat 34 :er nil \- "foo"))
-     (let [thirty-four 34
-           er-keyword :er
-           null nil
-           dash-char \-
-           foo-str "foo"]
-       (compare-perf
-         (str thirty-four er-keyword null dash-char foo-str)
-         (s/strcat thirty-four er-keyword ^Object null dash-char foo-str))))
-   (testing "large text"
-     (compare-perf
-       (str d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)
-       (s/strcat d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
+(deftest ^{:perf true :strcat true} test-strcat-perf
+  (testing "one-arg"
+    (compare-perf (str 34) (stringer.core/strcat 34))
+    (let [thirty-four 34]
+      (compare-perf (str thirty-four) (stringer.core/strcat thirty-four))))
+  (testing "small tokens"
+    (compare-perf (str "foo" "bar" "baz") (stringer.core/strcat "foo" "bar" "baz"))
+    (let [foo "foo" bar "bar" baz "baz"]
+      (compare-perf (str foo bar baz) (stringer.core/strcat foo bar baz))))
+  (testing "various tokens"
+    (compare-perf (str 34 :er nil \- "foo") (stringer.core/strcat 34 :er nil \- "foo"))
+    (let [thirty-four 34
+          er-keyword :er
+          null nil
+          dash-char \-
+          foo-str "foo"]
+      (compare-perf
+        (str thirty-four er-keyword null dash-char foo-str)
+        (s/strcat thirty-four er-keyword ^Object null dash-char foo-str))))
+  (testing "large text"
+    (compare-perf
+      (str d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)
+      (s/strcat d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
 
 
 (deftest test-strjoin
   (testing "no-arg"
-    (is (= (clojure.string/join ", " []) (stringer.core/strjoin ", ")))))
+    (is (= (clojure.string/join ", " []) (stringer.core/strjoin ", "))))
+  (testing "one-arg"
+    (is (= (clojure.string/join ", " [1]) (stringer.core/strjoin ", " 1)))
+    (let [one 1]
+      (is (= (clojure.string/join ", " [one]) (stringer.core/strjoin ", " one)))))
+  (testing "multi-args"
+    (is (= (clojure.string/join ", " [1 2 3]) (stringer.core/strjoin ", " 1 2 3)))
+    (let [one 1
+          two 2
+          three 3]
+      (is (= (clojure.string/join ", " [one two three]) (stringer.core/strjoin ", " one two three)))))
+  (testing "various-args"
+    (is (=
+          (clojure.string/join ", " [1 :er nil \newline false "foo"])
+          (stringer.core/strjoin ", " 1 :er nil \newline false "foo")))
+    (let [one 1
+          er-keyword :er
+          null nil
+          newline-char \newline
+          false-bool false
+          foo-str "foo"]
+      (is (=
+            (clojure.string/join ", " [one er-keyword null newline-char false-bool foo-str])
+            (stringer.core/strjoin ", " one er-keyword ^Object null newline-char false-bool foo-str)))))
+  (testing "large-text"
+    (is (=
+          (clojure.string/join ", " [d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum])
+          (stringer.core/strjoin ", " d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)))))
 
 
 (deftest ^{:perf true :strjoin true} test-strjoin
