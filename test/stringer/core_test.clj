@@ -22,22 +22,26 @@
     (some #(>= (.indexOf os ^String %) 0) ["mac" "linux" "unix"])))
 
 
-(defn colorize-slow
-  [slow-bench fast-bench text]
+(defn colorize
+  [text & args]
   (if (nix?)
-    (if (>= (first (:mean slow-bench)) (first (:mean fast-bench)))
-     (a/style text :bg-red)
-     (a/style text :bg-white))
+    (apply a/style text args)
     text))
 
 
-(defn colorize-fast
-  [slow-bench fast-bench text]
-  (if (nix?)
-    (if (>= (first (:mean slow-bench)) (first (:mean fast-bench)))
-     (a/style text :bg-white)
-     (a/style text :bg-red))
-    text))
+(defn comparison-summary
+  [slow-bench fast-bench]
+  (let [slow-mean (first (:mean slow-bench))
+        fast-mean (first (:mean fast-bench))
+        diff (Math/abs ^double (- slow-mean fast-mean))
+        calc-percent (fn [] (double (/ (* 100 diff)
+                                      (if (> slow-mean fast-mean)
+                                        fast-mean
+                                        slow-mean))))]
+    (cond
+      (= slow-mean fast-mean) (colorize "Both are equal" :yellow)
+      (> slow-mean fast-mean) (colorize (format "Stringer is faster by %.2f%%" (calc-percent) \%) :bg-white)
+      :otherwise              (colorize (format "Stringer is slower by %.2f%%" (calc-percent) \%) :bg-red))))
 
 
 (defmacro compare-perf
@@ -53,10 +57,7 @@
            (apply map (fn [s# f# ] {slow-label# s#
                                     fast-label# f#}))
            (pp/print-table [slow-label# fast-label#])))
-       (println "Mean execution time:"
-         (colorize-slow slow-bench# fast-bench# (str (first (:mean slow-bench#))))
-         " vs "
-         (colorize-fast slow-bench# fast-bench# (str (first (:mean fast-bench#)))))
+       (println (comparison-summary slow-bench# fast-bench#))
        (is (>= (first (:mean slow-bench#))
              (first (:mean fast-bench#)))))))
 
@@ -98,42 +99,60 @@
     (is (= (str) (s/strcat)))))
 
 
-(deftest ^{:perf true :strcat true} test-strcat-perf
-  (testing "one-arg"
-    (compare-perf (str 34) (stringer.core/strcat 34))
-    (let [thirty-four 34]
-      (compare-perf (str thirty-four) (stringer.core/strcat thirty-four))))
-  (testing "small tokens"
-    (compare-perf (str "foo" "bar" "baz") (stringer.core/strcat "foo" "bar" "baz"))
-    (let [foo "foo" bar "bar" baz "baz"]
-      (compare-perf (str foo bar baz) (stringer.core/strcat foo bar baz))))
-  (testing "various tokens"
-    (compare-perf (str 34 :er nil \- "foo") (stringer.core/strcat 34 :er nil \- "foo"))
-    (let [thirty-four 34
-          er-keyword :er
-          null nil
-          dash-char \-
-          foo-str "foo"]
-      (compare-perf
-        (str thirty-four er-keyword null dash-char foo-str)
-        (s/strcat thirty-four er-keyword ^Object null dash-char foo-str))))
-  (testing "large text"
-    (compare-perf
-      (str d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)
-      (s/strcat d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
+#_(deftest ^{:perf true :strcat true} test-strcat-perf
+   (testing "one-arg"
+     (compare-perf (str 34) (stringer.core/strcat 34))
+     (let [thirty-four 34]
+       (compare-perf (str thirty-four) (stringer.core/strcat thirty-four))))
+   (testing "small tokens"
+     (compare-perf (str "foo" "bar" "baz") (stringer.core/strcat "foo" "bar" "baz"))
+     (let [foo "foo" bar "bar" baz "baz"]
+       (compare-perf (str foo bar baz) (stringer.core/strcat foo bar baz))))
+   (testing "various tokens"
+     (compare-perf (str 34 :er nil \- "foo") (stringer.core/strcat 34 :er nil \- "foo"))
+     (let [thirty-four 34
+           er-keyword :er
+           null nil
+           dash-char \-
+           foo-str "foo"]
+       (compare-perf
+         (str thirty-four er-keyword null dash-char foo-str)
+         (s/strcat thirty-four er-keyword ^Object null dash-char foo-str))))
+   (testing "large text"
+     (compare-perf
+       (str d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)
+       (s/strcat d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
+
+
+(deftest test-strjoin
+  (testing "no-arg"
+    (is (= (clojure.string/join ", " []) (stringer.core/strjoin ", ")))))
 
 
 (deftest ^{:perf true :strjoin true} test-strjoin
-  (testing "no-arg"
-    (compare-perf (clojure.string/join ", " []) (stringer.core/strjoin ", ")))
   (testing "one-arg"
-    (compare-perf (clojure.string/join ", " [1]) (stringer.core/strjoin ", " 1)))
+    (compare-perf (clojure.string/join ", " [1]) (stringer.core/strjoin ", " 1))
+    (let [one 1]
+      (compare-perf (clojure.string/join ", " [one]) (stringer.core/strjoin ", " one))))
   (testing "multi-args"
-    (compare-perf (clojure.string/join ", " [1 2 3]) (stringer.core/strjoin ", " 1 2 3)))
+    (compare-perf (clojure.string/join ", " [1 2 3]) (stringer.core/strjoin ", " 1 2 3))
+    (let [one 1
+          two 2
+          three 3]
+      (compare-perf (clojure.string/join ", " [one two three]) (stringer.core/strjoin ", " one two three))))
   (testing "various-args"
     (compare-perf
       (clojure.string/join ", " [1 :er nil \newline false "foo"])
-      (stringer.core/strjoin ", " 1 :er nil \newline false "foo")))
+      (stringer.core/strjoin ", " 1 :er nil \newline false "foo"))
+    (let [one 1
+          er-keyword :er
+          null nil
+          newline-char \newline
+          false-bool false
+          foo-str "foo"]
+      (compare-perf
+        (clojure.string/join ", " [one er-keyword null newline-char false-bool foo-str])
+        (stringer.core/strjoin ", " one er-keyword ^Object null newline-char false-bool foo-str))))
   (testing "large-text"
     (compare-perf
       (clojure.string/join ", " [d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum])
