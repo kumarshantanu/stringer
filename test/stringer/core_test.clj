@@ -63,15 +63,30 @@
           (s/join! w ", " 1 2 3)))))
 
 
-(deftest ^{:perf true :strcat true} test-strcat
+(deftest test-strcat
   (testing "no-arg"
-    (compare-perf (str) (s/strcat)))
+    (is (= (str) (s/strcat)))))
+
+
+(deftest ^{:perf true :strcat true} test-strcat-perf
   (testing "one-arg"
-    (compare-perf (str 34) (s/strcat 34)))
+    (compare-perf (str 34) (stringer.core/strcat 34))
+    (let [thirty-four 34]
+      (compare-perf (str thirty-four) (stringer.core/strcat thirty-four))))
   (testing "small tokens"
-    (compare-perf (str "foo" "bar" "baz") (s/strcat "foo" "bar" "baz")))
+    (compare-perf (str "foo" "bar" "baz") (stringer.core/strcat "foo" "bar" "baz"))
+    (let [foo "foo" bar "bar" baz "baz"]
+      (compare-perf (str foo bar baz) (stringer.core/strcat foo bar baz))))
   (testing "various tokens"
-    (compare-perf (str 34 :er nil \- "foo") (s/strcat 34 :er nil \- "foo")))
+    (compare-perf (str 34 :er nil \- "foo") (stringer.core/strcat 34 :er nil \- "foo"))
+    (let [thirty-four 34
+          er-keyword :er
+          null nil
+          dash-char \-
+          foo-str "foo"]
+      (compare-perf
+        (str thirty-four er-keyword null dash-char foo-str)
+        (s/strcat thirty-four er-keyword ^Object null dash-char foo-str))))
   (testing "large text"
     (compare-perf
       (str d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)
@@ -80,13 +95,16 @@
 
 (deftest ^{:perf true :strjoin true} test-strjoin
   (testing "no-arg"
-    (compare-perf (t/join ", " []) (s/strjoin ", ")))
+    (compare-perf (clojure.string/join ", " []) (stringer.core/strjoin ", ")))
   (testing "one-arg"
-    (compare-perf (t/join ", " [1]) (s/strjoin ", " 1)))
+    (compare-perf (clojure.string/join ", " [1]) (stringer.core/strjoin ", " 1)))
   (testing "multi-args"
-    (compare-perf (t/join ", " [1 2 3]) (s/strjoin ", " 1 2 3)))
+    (compare-perf (clojure.string/join ", " [1 2 3]) (stringer.core/strjoin ", " 1 2 3)))
   (testing "various-args"
-    (compare-perf (t/join ", " [1 :er nil \newline false "foo"]) (s/strjoin ", " 1 :er nil \newline false "foo")))
+    (compare-perf
+      (clojure.string/join ", " [1 :er nil \newline false "foo"])
+      (stringer.core/strjoin ", " 1 :er nil \newline false "foo")))
   (testing "large-text"
-    (compare-perf (t/join ", " [d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum])
-      (s/strjoin ", " d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
+    (compare-perf
+      (clojure.string/join ", " [d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum])
+      (stringer.core/strjoin ", " d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
