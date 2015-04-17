@@ -13,12 +13,10 @@
   [coll]
   (->> coll
     (remove nil?)
-    (reduce (fn
-              ([] (str))
-              ([x] (str x))
-              ([x y] (if (and (seq x) (stringable? y))
-                       (conj (pop x) (str (last x) y))
-                       (conj x y))))
+    (reduce (fn [x y]
+              (if (and (seq x) (string? (last x)) (stringable? y))
+                (conj (pop x) (str (last x) y))
+                (conj x y)))
       [])))
 
 
