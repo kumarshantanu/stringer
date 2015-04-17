@@ -62,8 +62,10 @@
 (defmacro strjoin
   "Concatenate tokens with specified delimiter."
   [delimiter & args]
-  (let [delim (gensym)
-        delimited-args (doall (interpose delim args))]
-    `(let [~delim ~delimiter]
-       (strcat
-         ~@delimited-args))))
+  (if (i/stringable? delimiter)
+    `(strcat ~@(doall (interpose delimiter args)))
+    (let [delim (gensym)
+          delimited-args (doall (interpose delim args))]
+      `(let [~delim ~delimiter]
+         (strcat
+           ~@delimited-args)))))
