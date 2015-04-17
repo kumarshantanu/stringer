@@ -57,6 +57,13 @@ The local can be bound to something else too:
 => "[1, 2, 3]"
 ```
 
+### Caveats
+
+* Stringer uses macros to inline the code. Of course, they cannot be used like functions.
+* If you see exception like this
+   `Exception in thread "main" java.lang.IllegalArgumentException: More than one matching method found: append, compiling:(...)`
+   Maybe you have `nil` as one of the non type-hinted arguments? Provide a type hint `^Object`.
+
 ## License
 
 Copyright © 2015 Shantanu Kumar
