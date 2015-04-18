@@ -40,8 +40,10 @@
                                         slow-mean))))]
     (cond
       (= slow-mean fast-mean) (colorize "Both are equal" :yellow)
-      (> slow-mean fast-mean) (colorize (format "Stringer is faster by %.2f%%" (calc-percent) \%) :bg-white)
-      :otherwise              (colorize (format "Stringer is slower by %.2f%%" (calc-percent) \%) :bg-red))))
+      (> slow-mean fast-mean) (colorize (format "Stringer is faster by %.2f%% in this test." (calc-percent) \%)
+                                :black :bg-green)
+      :otherwise              (colorize (format "Stringer is slower by %.2f%% in this test." (calc-percent) \%)
+                                :black :bg-red))))
 
 
 (defmacro compare-perf
