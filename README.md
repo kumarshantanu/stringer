@@ -1,6 +1,6 @@
 # stringer
 
-A Clojure library for fast string operations. (See the [Development](#Development) section to run performance
+A Clojure library for fast string operations. (See the [Development](#development) section to run performance
 benchmarks.)
 
 
