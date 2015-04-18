@@ -1,6 +1,8 @@
 # stringer
 
-A Clojure library for fast string operations.
+A Clojure library for fast string operations. (See the [Development](#Development) section to run performance
+benchmarks.)
+
 
 ## Usage
 
@@ -63,6 +65,21 @@ The local can be bound to something else too:
 * If you see exception like this
    `Exception in thread "main" java.lang.IllegalArgumentException: More than one matching method found: append, compiling:(...)`
    Maybe you have `nil` as one of the non type-hinted arguments? Provide a type hint `^Object`.
+
+
+## Development
+
+### Running performance benchmarks
+
+With Clojure 1.6: `lein with-profile c16,dev do clean, test :perf`
+
+With Clojure 1.7: `lein with-profile c17,dev do clean, test :perf`
+
+To run with both Clojure 1.6 and 1.7 in order: `lein cascade perf`
+
+_If you are running the tests on a laptop, connect it to the power supply (so that the CPU is not clocked down) and
+turn the screensaver/suspend off._
+
 
 ## License
 
