@@ -14,9 +14,10 @@
   (->> coll
     (remove nil?)
     (reduce (fn [x y]
-              (if (and (seq x) (string? (last x)) (stringable? y))
-                (conj (pop x) (str (last x) y))
+              (if (stringable? y)
+                (cond
+                  (string? (last x)) (conj (pop x) (str (last x) y))
+                  (empty? x)         (conj x (str y))
+                  :otherwise         (conj x y))
                 (conj x y)))
       [])))
-
-
