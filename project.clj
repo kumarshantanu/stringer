@@ -5,8 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :profiles {:dev {:dependencies [[criterium            "0.4.3" :exclusions [[org.clojure/clojure] [clojure-complete]]]
                                   [myguidingstar/clansi "1.3.0" :exclusions [[org.clojure/clojure]]]
-                                  [org.clojure/tools.nrepl "0.2.10"]
-                                  ]}
+                                  [org.jfree/jfreechart "1.0.19"]
+                                  [org.clojure/tools.nrepl "0.2.10"]]}
              :c16 {:dependencies [[org.clojure/clojure "1.6.0"]]}
              :c17 {:dependencies [[org.clojure/clojure "1.7.0-beta1"]]
                    :global-vars {*unchecked-math* :warn-on-boxed}}}

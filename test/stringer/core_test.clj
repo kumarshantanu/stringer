@@ -1,11 +1,42 @@
 (ns stringer.core-test
   (:require [clojure.test :refer :all]
-            [clojure.pprint     :as pp]
-            [clojure.string     :as t]
-            [stringer.core      :as s]
-            [stringer.test-data :as d]
-            [criterium.core     :as c]
-            [clansi.core        :as a]))
+            [clojure.pprint         :as pp]
+            [clojure.string         :as t]
+            [stringer.core          :as s]
+            [stringer.test-data     :as d]
+            [stringer.test-barchart :as b]
+            [criterium.core         :as c]
+            [clansi.core            :as a]))
+
+
+(def bar-chart-data (atom []))
+
+
+(defn wrap-setup
+  [f]
+  (f)
+  (-> (let [raw-data @bar-chart-data
+            make-row (fn [k] (reduce (fn [x {:keys [fast-name] :as y}]
+                                       (assoc x fast-name (get y k)))
+                               {} raw-data))]
+        [(assoc (make-row :slow-mean) :name "Core")
+         (assoc (make-row :fast-mean) :name "Stringer")])
+    (b/make-category-dataset {:group-key :name})
+    (b/make-bar-chart-3d "Stringer benchmark statistics (lower is better)" {:category-title "Test cases"
+                                                                            :value-title "Latency (lower is better)"})
+    (b/save-chart-as-file "bench.png" {:width 1280 :height 800})))
+
+
+(use-fixtures :once wrap-setup)
+
+
+(defn save-bar-chart-data!
+  "Save given map as bar-chart data."
+  [slow-name slow-mean fast-name fast-mean]
+  (swap! bar-chart-data conj {:slow-mean slow-mean
+                              :fast-mean fast-mean
+                              :slow-name slow-name
+                              :fast-name fast-name}))
 
 
 (defmacro measure
@@ -60,6 +91,9 @@
                                     fast-label# f#}))
            (pp/print-table [slow-label# fast-label#])))
        (println (comparison-summary slow-bench# fast-bench#))
+       (save-bar-chart-data!
+         ~(pr-str slow-expr) (first (:mean slow-bench#))
+         ~(pr-str fast-expr) (first (:mean fast-bench#)))
        (is (>= (first (:mean slow-bench#))
              (first (:mean fast-bench#)))))))
 
@@ -119,11 +153,11 @@
           foo-str "foo"]
       (compare-perf
         (str thirty-four er-keyword null dash-char foo-str)
-        (s/strcat thirty-four er-keyword ^Object null dash-char foo-str))))
+        (stringer.core/strcat thirty-four er-keyword ^Object null dash-char foo-str))))
   (testing "large text"
     (compare-perf
       (str d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)
-      (s/strcat d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
+      (stringer.core/strcat d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
 
 
 (deftest test-strjoin
@@ -158,7 +192,7 @@
           (stringer.core/strjoin ", " d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)))))
 
 
-(deftest ^{:perf true :strjoin true} test-strjoin
+(deftest ^{:perf true :strjoin true} test-strjoin-perf
   (testing "one-arg"
     (compare-perf (clojure.string/join ", " [1]) (stringer.core/strjoin ", " 1))
     (let [one 1]
