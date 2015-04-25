@@ -1,12 +1,12 @@
 (ns stringer.core-test
   (:require [clojure.test :refer :all]
-            [clojure.pprint         :as pp]
-            [clojure.string         :as t]
-            [stringer.core          :as s]
-            [stringer.test-data     :as d]
-            [stringer.test-barchart :as b]
-            [criterium.core         :as c]
-            [clansi.core            :as a]))
+            [clojure.pprint     :as pp]
+            [clojure.string     :as t]
+            [stringer.core      :as s]
+            [stringer.test-data :as d]
+            [cljfreechart.core  :as b]
+            [criterium.core     :as c]
+            [clansi.core        :as a]))
 
 
 (def bar-chart-data (atom []))
