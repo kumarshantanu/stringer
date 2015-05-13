@@ -35,8 +35,8 @@
   [m]
   (t/join ", " [(str "Foo " (:foo m))
                 (str "Bands: " (t/join ", " (:bar m)))
-                (str "Diff: " (- (get-in m [:baz :norf])
-                                (get-in m [:baz :quux])))]))
+                (str "Diff: " (- ^long (get-in m [:baz :norf])
+                                ^long (get-in m [:baz :quux])))]))
 
 
 (defn composite-strcat
@@ -47,8 +47,8 @@
       ", "
       "Bands: " (t/join ", " (:bar m))
       ", "
-      "Diff: " (- (get-in m [:baz :norf])
-                 (get-in m [:baz :quux])))))
+      "Diff: " (- ^long (get-in m [:baz :norf])
+                 ^long (get-in m [:baz :quux])))))
 
 
 (def composite-data {:foo "fighters"

@@ -60,8 +60,8 @@
 
 (defn comparison-summary
   [slow-bench fast-bench]
-  (let [slow-mean (first (:mean slow-bench))
-        fast-mean (first (:mean fast-bench))
+  (let [^double slow-mean (first (:mean slow-bench))
+        ^double fast-mean (first (:mean fast-bench))
         diff (Math/abs ^double (- slow-mean fast-mean))
         calc-percent (fn [] (double (/ (* 100 diff)
                                       (if (> slow-mean fast-mean)
