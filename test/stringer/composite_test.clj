@@ -21,14 +21,14 @@
   (testing "large-text"
     (is (=
           (clojure.string/join ", " [d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum])
-          (stringer.core/strjoin ", " d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)))))
+          (stringer.core/strdel ", " d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)))))
 
 
-(deftest ^{:perf true :strjoin true} test-largetext-join-perf
+(deftest ^{:perf true :strdel true} test-largetext-join-perf
   (testing "large-text"
     (h/compare-perf
       (clojure.string/join ", " [d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum])
-      (stringer.core/strjoin ", " d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
+      (stringer.core/strdel ", " d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
 
 
 (defn composite-str
@@ -57,7 +57,7 @@
                            :norf 20}})
 
 
-(deftest ^{:perf true :strjoin true} test-composite-concat
+(deftest ^{:perf true :strdel true} test-composite-concat
   (h/compare-perf
     (composite-str composite-data)
     (composite-strcat composite-data)))

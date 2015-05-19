@@ -59,7 +59,7 @@
          (append! ~w ~@more)))))
 
 
-(defmacro strjoin
+(defmacro strdel
   "Concatenate tokens with specified delimiter."
   [delimiter & args]
   (if (i/stringable? delimiter)

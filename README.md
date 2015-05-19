@@ -23,11 +23,11 @@ benchmarks.)
 
 ### Joining string tokens by delimiter
 
-`strjoin` is a macro that accepts delimiter as first argument, and tokens as
+`strdel` is a macro that accepts delimiter as first argument, and tokens as
 the remaining arguments.
 
 ```clojure
-(s/strjoin ", " "foo" :bar 707 nil 'baz)
+(s/strdel ", " "foo" :bar 707 nil 'baz)
 => "foo, :bar, 707, , baz"
 ```
 
