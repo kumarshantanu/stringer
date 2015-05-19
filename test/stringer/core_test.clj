@@ -33,11 +33,11 @@
 (deftest test-join!
   (is (= "1, 2, 3"
         (s/with-obj-str w
-          (s/join! w ", " 1 2 3))))
+          (s/interleave! w ", " 1 2 3))))
   (is (= "foo:1, 2, 3"
         (s/with-obj-str w
           (s/append! w "foo:")
-          (s/join! w ", " 1 2 3)))))
+          (s/interleave! w ", " 1 2 3)))))
 
 
 (deftest test-strcat

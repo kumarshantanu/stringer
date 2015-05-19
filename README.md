@@ -40,12 +40,12 @@ the remaining arguments.
 => "foo707"
 ```
 
-There are `append!` and `join!` macros to work with `StringBuilder`.
+There are `append!` and `interleave!` macros to work with `StringBuilder`.
 
 ```clojure
 (s/with-obj-str w
   (s/append! w "foo" :bar 707 nil 'baz)
-  (s/join! w ", " :quux :norf))
+  (s/interleave! w ", " :quux :norf))
 => "foo:bar707baz:quux, :norf"
 ```
 
