@@ -31,13 +31,15 @@
 
 
 (deftest test-join!
-  (is (= "1, 2, 3"
+  (is (= "1, 2, 3foo|:bar"
         (s/with-obj-str w
-          (s/interleave! w ", " 1 2 3))))
-  (is (= "foo:1, 2, 3"
+          (s/interleave! w ", " 1 2 3)
+          (s/join! w \| ["foo" :bar]))))
+  (is (= "foo:1, 2, 3bar|:baz"
         (s/with-obj-str w
           (s/append! w "foo:")
-          (s/interleave! w ", " 1 2 3)))))
+          (s/interleave! w ", " 1 2 3)
+          (s/join! w \| ["bar" :baz])))))
 
 
 (deftest test-strcat

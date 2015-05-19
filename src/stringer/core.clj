@@ -40,6 +40,13 @@
  `(append! ~holder ~@(interpose delimiter args)))
 
 
+(defmacro join!
+  "Like clojure.string/join, but appends tokens to a holder instead of returning a string."
+  [holder delimiter coll]
+  `(doseq [each# (interpose ~delimiter ~coll)]
+     (append! ~holder each#)))
+
+
 (defmacro strcat
   "Concatenate strings faster than 'str'. Note that this is a macro, hence
   cannot be used as a function."
