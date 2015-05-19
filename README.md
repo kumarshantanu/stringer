@@ -4,6 +4,11 @@ A Clojure library for fast string operations. (See the [Development](#developmen
 benchmarks.)
 
 
+## Installation
+
+Leiningen coordinates: `[stringer "0.1.0"]`
+
+
 ## Usage
 
 ### Requiring namespace
