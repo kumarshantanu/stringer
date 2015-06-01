@@ -43,8 +43,13 @@
 (defmacro join!
   "Like clojure.string/join, but appends tokens to a holder instead of returning a string."
   [holder delimiter coll]
-  `(doseq [each# (interpose ~delimiter ~coll)]
-     (append! ~holder each#)))
+  `(loop [coll# (seq ~coll)
+          del?# false]
+     (when coll#
+       (when del?#
+         (append! ~holder ~delimiter))
+       (append! ~holder (first coll#))
+       (recur (next coll#) true))))
 
 
 (defmacro strcat
