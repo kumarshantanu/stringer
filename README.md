@@ -6,7 +6,7 @@ benchmarks.)
 
 ## Installation
 
-Leiningen coordinates: `[stringer "0.1.0"]`
+Leiningen coordinates: `[stringer "0.1.1-SNAPSHOT"]`
 
 
 ## Usage
@@ -45,12 +45,12 @@ the remaining arguments.
 => "foo707"
 ```
 
-There are `append!`, `interleave!` and `join!` macros to work with `StringBuilder`.
+There are `append!`, `join-all!` and `join!` macros to work with `StringBuilder`.
 
 ```clojure
 (s/with-obj-str w
   (s/append! w "foo" :bar 707 nil 'baz)
-  (s/interleave! w ", " :quux :norf)
+  (s/join-all! w ", " :quux :norf)
   (s/join! w \| ["quick" "brown" "fox"]))
 => "foo:bar707baz:quux, :norfquick|brown|fox"
 ```

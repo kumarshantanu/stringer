@@ -1,9 +1,9 @@
-(defproject stringer "0.1.0"
+(defproject stringer "0.1.1-SNAPSHOT"
   :description "Fast string operations for Clojure"
   :url "https://github.com/kumarshantanu/stringer"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :profiles {:dev {:dependencies [[citius "0.1.0-SNAPSHOT"]
+  :profiles {:dev {:dependencies [[citius "0.1.0"]
                                   [org.clojure/tools.nrepl "0.2.10"]]}
              :c16 {:dependencies [[org.clojure/clojure "1.6.0"]]}
              :c17 {:dependencies [[org.clojure/clojure "1.7.0-RC1"]]
