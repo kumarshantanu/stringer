@@ -34,8 +34,8 @@
     `(do ~@all-appends)))
 
 
-(defmacro interleave!
- "Interleave args with delimiter and apply each element of the result sequence to the (.append holder %) method."
+(defmacro join-all!
+ "Interpose args with delimiter and apply each element of the result sequence to the (.append holder %) method."
  [holder delimiter & args]
  `(append! ~holder ~@(interpose delimiter args)))
 
