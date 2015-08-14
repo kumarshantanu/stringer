@@ -12,3 +12,4 @@ pom.xml.asc
 /bin
 /.classpath
 /.project
+/bench*.png
