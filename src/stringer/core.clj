@@ -25,8 +25,9 @@
   "Append all arguments to the StringBuilder instance."
   [holder & args]
   (let [each-append (fn [x]
-                      `(when-not (nil? ~x)  ; NULL doesn't work with StringBuilder
-                         (.append ~holder ~x)))
+                      `(let [x# ~x]
+                         (when-not (nil? x#)  ; NULL doesn't work with StringBuilder
+                           (.append ~holder x#))))
         all-appends (->> args
                       (remove nil?)
                       i/precompile
