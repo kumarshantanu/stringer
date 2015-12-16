@@ -1,4 +1,4 @@
-(defproject stringer "0.1.1"
+(defproject stringer "0.1.2"
   :description "Fast string operations for Clojure"
   :url "https://github.com/kumarshantanu/stringer"
   :license {:name "Eclipse Public License"
@@ -7,6 +7,8 @@
                                   [org.clojure/tools.nrepl "0.2.10"]]}
              :c16 {:dependencies [[org.clojure/clojure "1.6.0"]]}
              :c17 {:dependencies [[org.clojure/clojure "1.7.0"]]
+                   :global-vars {*unchecked-math* :warn-on-boxed}}
+             :c18 {:dependencies [[org.clojure/clojure "1.8.0-RC3"]]
                    :global-vars {*unchecked-math* :warn-on-boxed}}}
   :jvm-opts ^:replace ["-server" "-Xms2048m" "-Xmx2048m"]
   :global-vars {*warn-on-reflection* true
