@@ -69,3 +69,18 @@
       (is (=
             (clojure.string/join ", " [one er-keyword null newline-char false-bool foo-str])
             (stringer.core/strdel ", " one er-keyword ^Object null newline-char false-bool foo-str))))))
+
+
+(deftest test-strfmt
+  (testing "no-arg"
+    (is (= (format "") (stringer.core/strfmt "")))
+    (is (= (format "foo bar") (stringer.core/strfmt "foo bar"))))
+  (testing "one-arg"
+    (is (= (format "%s bar baz" "foo") (stringer.core/strfmt "%s bar baz" "foo")))
+    (is (= (format "foo %s baz" "bar") (stringer.core/strfmt "foo %s baz" "bar")))
+    (is (= (format "foo bar %s" "baz") (stringer.core/strfmt "foo bar %s" "baz")))
+    (let [x "baz"]
+      (is (= (format "foo bar %s" x) (stringer.core/strfmt "foo bar %s" x)))))
+  (testing "multi-args"
+    (is (= (format "Hello %s, there are %d orders costing %f each." "human" 13 45.67)
+          (stringer.core/strfmt "Hello %s, there are %d orders costing %f each." "human" 13 45.67)))))

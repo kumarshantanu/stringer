@@ -82,3 +82,43 @@
       `(let [~delim ~delimiter]
          (strcat
            ~@delimited-args)))))
+
+
+(defmacro strfmt
+  "Format (like clojure.core/format but only %d, %f, %s supported) given string literal with arguments."
+  [format-str & args]
+  (i/expected string? "first argument to 'strfmt' to be string literal" format-str)
+  (let [sb (gensym "sb-")
+        conj-str (fn [exps buf]
+                   (if (seq buf)
+                     (let [^String s (apply str buf)]
+                       (conj exps `(.append ~sb ~s)))
+                     exps))
+        head-arg (fn [arg-seq]
+                   (if (seq arg-seq)
+                     (first arg-seq)
+                     (throw (IllegalArgumentException. "Insufficient arguments to 'strfmt'"))))]
+    (loop [fmt  format-str ; remaining format string to process
+           buf  []         ; buffer for the current contiguous string
+           args args       ; remaining args to process
+           exps []]        ; expressions to evaluate later
+      (if (empty? fmt)
+        `(with-obj-str [~sb (StringBuilder. ~(count format-str))]
+           ~@(conj-str exps buf))
+        (let [ch (first fmt)
+              c2 (second fmt)]
+          (if (= ch \%)
+            (case c2
+              \%  (recur (subs fmt 2) (conj buf c2) args exps)
+              \d  (recur (subs fmt 2) [] (next args) (-> exps
+                                                       (conj-str buf)
+                                                       (conj `(.append ~sb (long ~(head-arg args))))))
+              \f  (recur (subs fmt 2) [] (next args) (-> exps
+                                                       (conj-str buf)
+                                                       (conj `(.append ~sb (double ~(head-arg args))))))
+              \s  (recur (subs fmt 2) [] (next args) (-> exps
+                                                       (conj-str buf)
+                                                       (conj `(.append ~sb ~(head-arg args)))))
+              nil (i/expected "either %d, %f or %s" "%")
+              (i/expected "either %s, %d or %f" (str \% c2)))
+            (recur (subs fmt 1) (conj buf ch) args exps)))))))
