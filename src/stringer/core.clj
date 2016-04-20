@@ -116,6 +116,9 @@
               \f  (recur (subs fmt 2) [] (next args) (-> exps
                                                        (conj-str buf)
                                                        (conj `(.append ~sb (double ~(head-arg args))))))
+              \n  (recur (subs fmt 2) [] args (-> exps
+                                                (conj-str buf)
+                                                (conj `(.append ~sb i/line-separator))))
               \s  (recur (subs fmt 2) [] (next args) (-> exps
                                                        (conj-str buf)
                                                        (conj `(.append ~sb ~(head-arg args)))))

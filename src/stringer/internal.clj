@@ -30,3 +30,6 @@
                   :otherwise         (conj x y))
                 (conj x y)))
       [])))
+
+
+(def ^String line-separator (System/getProperty "line.separator"))

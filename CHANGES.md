@@ -2,8 +2,9 @@
 
 ## 0.2.0 / - 2016-April-??
 
-- New macro `strfmt` - faster `clojure.core/format`
-  - Supports only `%d`, `%f` and `%s` without width qualifiers
+- New macro `strfmt` - faster string formatting than `clojure.core/format`
+  - Supports `%d`, `%f` and `%s` without width qualifiers
+  - Supports `%n`
 
 
 ## 0.1.2 / 2015-December-16
