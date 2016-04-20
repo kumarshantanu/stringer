@@ -1,6 +1,15 @@
 (ns stringer.internal)
 
 
+(defn expected
+  ([expectation found]
+    (throw (IllegalArgumentException.
+             (format "Expected %s, but found (%s) %s" expectation (class found) (pr-str found)))))
+  ([pred expectation found]
+    (when-not (pred found)
+      (expected expectation found))))
+
+
 (defn stringable?
   [x]
   (not (or (symbol? x)
