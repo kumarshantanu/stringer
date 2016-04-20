@@ -9,14 +9,14 @@
              :c17 {:dependencies [[org.clojure/clojure "1.7.0"]]
                    :global-vars {*unchecked-math* :warn-on-boxed}}
              :c18 {:dependencies [[org.clojure/clojure "1.8.0"]]
-                   :global-vars {*unchecked-math* :warn-on-boxed}}}
+                   :global-vars {*unchecked-math* :warn-on-boxed}}
+             :dlnk {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
+             :perf {:dependencies [[citius "0.2.2"]]
+                    :test-paths ["perf"]
+                    :jvm-opts ^:replace ["-server" "-Xms2048m" "-Xmx2048m"]}}
   :jvm-opts ^:replace ["-server" "-Xms2048m" "-Xmx2048m"]
   :global-vars {*warn-on-reflection* true
                 *assert* true}
-  :test-selectors {:default (complement :perf)
-                   :perf :perf
-                   :strcat :strcat
-                   :strjoin :strjoin}
   :plugins [[lein-cascade "0.1.2"]]
   :cascade {"test" [["clean"]
                     ["with-profile" "c16,dev" "test"]
@@ -25,8 +25,8 @@
                     ["clean"]
                     ["with-profile" "c18,dev" "test"]]
             "perf" [["clean"]
-                    ["with-profile" "c16,dev" "test" ":perf"]
+                    ["with-profile" "c16,dev,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c17,dev" "test" ":perf"]
+                    ["with-profile" "c17,dev,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c18,dev" "test" ":perf"]]})
+                    ["with-profile" "c18,dev,perf" "test"]]})
