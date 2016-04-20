@@ -14,17 +14,24 @@
 
 
 (deftest test-concat-large-text
-  (testing "large text"
-    (c/compare-perf "+ 3 large tokens"
+  (testing "concatenating large text"
+    (c/compare-perf "3 large tokens"
       (str d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)
       (stringer.core/strcat d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
 
 
 (deftest test-largetext-join-perf
-  (testing "large-text"
-    (c/compare-perf "| 3 large tokens"
+  (testing "joining large text"
+    (c/compare-perf "3 large tokens"
       (clojure.string/join ", " [d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum])
       (stringer.core/strdel ", " d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
+
+
+(deftest test-format-large-text
+  (testing "formatting large text"
+    (c/compare-perf "3 large tokens"
+      (format "%s, %s, %s" d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum)
+      (stringer.core/strfmt "%s, %s, %s" d/lorem-ipsum d/lorem-ipsum d/lorem-ipsum))))
 
 
 (defn composite-str
