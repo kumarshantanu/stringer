@@ -76,11 +76,46 @@
     (is (= (format "") (stringer.core/strfmt "")))
     (is (= (format "foo bar") (stringer.core/strfmt "foo bar"))))
   (testing "one-arg"
+    ;; placement
     (is (= (format "%s bar baz" "foo") (stringer.core/strfmt "%s bar baz" "foo")))
     (is (= (format "foo %s baz" "bar") (stringer.core/strfmt "foo %s baz" "bar")))
     (is (= (format "foo bar %s" "baz") (stringer.core/strfmt "foo bar %s" "baz")))
     (let [x "baz"]
-      (is (= (format "foo bar %s" x) (stringer.core/strfmt "foo bar %s" x)))))
+      (is (= (format "foo bar %s" x) (stringer.core/strfmt "foo bar %s" x))))
+    ;; boolean
+    (is (= (format "%b" false) (stringer.core/strfmt "%b" false)))
+    (is (= (format "%b" nil)   (stringer.core/strfmt "%b" nil)))
+    (is (= (format "%b" :foo)  (stringer.core/strfmt "%b" :foo)))
+    (is (= (format "%B" :foo)  (stringer.core/strfmt "%B" :foo)))
+    (is (= (format "%B" nil)   (stringer.core/strfmt "%B" nil)))
+    ;; integer
+    (is (= (format "%d" 45)    (stringer.core/strfmt "%d" 45)))
+    (is (= (format "%d" nil)   (stringer.core/strfmt "%d" nil)))
+    ;; float
+    (is (= (format "%f" 45.67) (stringer.core/strfmt "%f" 45.67)))
+    (is (= (format "%f" nil)   (stringer.core/strfmt "%f" nil)))
+    ;; hash code
+    (is (= (format "%h" :foo)  (stringer.core/strfmt "%h" :foo)))
+    (is (= (format "%h" nil)   (stringer.core/strfmt "%h" nil)))
+    (is (= (format "%H" :foo)  (stringer.core/strfmt "%H" :foo)))
+    (is (= (format "%H" nil)   (stringer.core/strfmt "%H" nil)))
+    ;; platform-specific newline
+    (is (= (format "%n")       (stringer.core/strfmt "%n")))
+    (is (= (format "%n")       (stringer.core/strfmt "%n")))
+    ;; octal
+    (is (= (format "%o" 45)    (stringer.core/strfmt "%o" 45)))
+    (is (= (format "%o" nil)   (stringer.core/strfmt "%o" nil)))
+    ;; string
+    (is (= (format "%s" :foo)  (stringer.core/strfmt "%s" :foo)))
+    (is (= (format "%s" nil)   (stringer.core/strfmt "%s" nil)))
+    (is (= (format "%S" :foo)  (stringer.core/strfmt "%S" :foo)))
+    (is (= (format "%S" nil)   (stringer.core/strfmt "%S" nil)))
+    ;; hex
+    (is (= (format "%x" 1234)  (stringer.core/strfmt "%x" 1234)))
+    (is (= (format "%x" nil)   (stringer.core/strfmt "%x" nil)))
+    (is (= (format "%X" 1234)  (stringer.core/strfmt "%X" 1234)))
+    (is (= (format "%X" nil)   (stringer.core/strfmt "%X" nil)))
+    )
   (testing "multi-args"
-    (is (= (format "Hello %s, there are %d orders costing %f each." "human" 13 45.67)
-          (stringer.core/strfmt "Hello %s, there are %d orders costing %f each." "human" 13 45.67)))))
+    (is (= (format "Customer: %s, Orders: %d for this month." "XYZ Corp" 13)
+          (stringer.core/strfmt "Customer: %s, Orders: %d for this month." "XYZ Corp" 13)))))

@@ -97,7 +97,11 @@
         head-arg (fn [arg-seq]
                    (if (seq arg-seq)
                      (first arg-seq)
-                     (throw (IllegalArgumentException. "Insufficient arguments to 'strfmt'"))))]
+                     (throw (IllegalArgumentException. "Insufficient arguments to 'strfmt'"))))
+        conj-exp (fn [exps buf new-exp]
+                   (-> exps
+                     (conj-str buf)
+                     (conj new-exp)))]
     (loop [fmt  format-str ; remaining format string to process
            buf  []         ; buffer for the current contiguous string
            args args       ; remaining args to process
@@ -110,18 +114,67 @@
           (if (= ch \%)
             (case c2
               \%  (recur (subs fmt 2) (conj buf c2) args exps)
-              \d  (recur (subs fmt 2) [] (next args) (-> exps
-                                                       (conj-str buf)
-                                                       (conj `(.append ~sb (long ~(head-arg args))))))
-              \f  (recur (subs fmt 2) [] (next args) (-> exps
-                                                       (conj-str buf)
-                                                       (conj `(.append ~sb (double ~(head-arg args))))))
-              \n  (recur (subs fmt 2) [] args (-> exps
-                                                (conj-str buf)
-                                                (conj `(.append ~sb i/line-separator))))
-              \s  (recur (subs fmt 2) [] (next args) (-> exps
-                                                       (conj-str buf)
-                                                       (conj `(.append ~sb ~(head-arg args)))))
-              nil (i/expected "either %d, %f or %s" "%")
-              (i/expected "either %s, %d or %f" (str \% c2)))
+              \B  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb (.toUpperCase
+                                                                       (String/valueOf
+                                                                         (boolean ~(head-arg args)))))))
+              \b  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb (boolean ~(head-arg args)))))
+              \d  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb (let [arg# ~(head-arg args)]
+                                                                       (if (nil? arg#)
+                                                                         "null"
+                                                                         (long arg#))))))
+              \f  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb (let [arg# ~(head-arg args)]
+                                                                       (if (nil? arg#)
+                                                                         "null"
+                                                                         (double arg#))))))
+              \H  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb ^String (let [arg# ~(head-arg args)]
+                                                                               (if (nil? arg#)
+                                                                                 "NULL"
+                                                                                 (.toUpperCase
+                                                                                   (Integer/toHexString
+                                                                                     (.hashCode ^Object arg#))))))))
+              \h  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb ^String (let [arg# ~(head-arg args)]
+                                                                               (if (nil? arg#)
+                                                                                 "null"
+                                                                                 (Integer/toHexString
+                                                                                   (.hashCode ^Object arg#)))))))
+              \n  (recur (subs fmt 2) [] args (conj-exp exps buf
+                                                `(.append ~sb i/line-separator)))
+              \o  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb ^String (let [arg# ~(head-arg args)]
+                                                                               (if (nil? arg#)
+                                                                                 "null"
+                                                                                 (Long/toOctalString
+                                                                                   (long arg#)))))))
+              \S  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb ^String (let [arg# ~(head-arg args)]
+                                                                               (if (nil? arg#)
+                                                                                 "NULL"
+                                                                                 (.toUpperCase
+                                                                                   (String/valueOf arg#)))))))
+              \s  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb ^String (let [arg# ~(head-arg args)]
+                                                                               (if (nil? arg#)
+                                                                                 "null"
+                                                                                 (String/valueOf arg#))))))
+              \X  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb ^String (let [arg# ~(head-arg args)]
+                                                                               (if (nil? arg#)
+                                                                                 "NULL"
+                                                                                 (.toUpperCase
+                                                                                   (Long/toHexString
+                                                                                     (long arg#))))))))
+              \x  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
+                                                       `(.append ~sb ^String (let [arg# ~(head-arg args)]
+                                                                               (if (nil? arg#)
+                                                                                 "null"
+                                                                                 (Long/toHexString
+                                                                                   (long arg#)))))))
+              nil (i/expected "either %b, %d, %f, %h, %n, %o, %s or %x" "%")
+              (i/expected "either %b, %d, %f, %h, %n, %o, %s or %x" (str \% c2)))
             (recur (subs fmt 1) (conj buf ch) args exps)))))))

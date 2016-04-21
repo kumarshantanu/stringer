@@ -3,8 +3,9 @@
 ## 0.2.0 / - 2016-April-??
 
 - New macro `strfmt` - faster string formatting than `clojure.core/format`
-  - Supports `%d`, `%f` and `%s` without width qualifiers
-  - Supports `%n`
+  - Supports `%%`, `%b`, `%d`, `%f`, `%h`, `%n`, `%o`, `%s` and `%x` conversion specifiers
+  - Supports upper-case variants `%B`, `%H`, `%S` and `%X` conversion specifiers
+  - Does NOT support flags and width qualifiers in format specifiers
 
 
 ## 0.1.2 / 2015-December-16
