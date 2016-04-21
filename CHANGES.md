@@ -5,7 +5,7 @@
 - If args to `strfmt` are literals then directly `.append` them without `nil` check
 
 
-## 0.2.0 / - 2016-April-21
+## 0.2.0 / 2016-April-21
 
 - New macro `strfmt` - faster string formatting than `clojure.core/format`
   - Supports `%%`, `%b`, `%d`, `%f`, `%h`, `%n`, `%o`, `%s` and `%x` conversion specifiers
