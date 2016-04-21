@@ -89,11 +89,11 @@ The local can be bound to something else too:
 
 ### Running performance benchmarks
 
-With Clojure 1.6: `lein with-profile c16,dev do clean, test :perf`
+With Clojure 1.6: `lein with-profile c16,dev,perf do clean, test`
 
-With Clojure 1.7: `lein with-profile c17,dev do clean, test :perf`
+With Clojure 1.7: `lein with-profile c17,dev,perf do clean, test`
 
-With Clojure 1.8: `lein with-profile c18,dev do clean, test :perf`
+With Clojure 1.8: `lein with-profile c18,dev,perf do clean, test`
 
 To run with both Clojure 1.6, 1.7 and 1.8 in order: `lein cascade perf`
 
