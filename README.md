@@ -6,7 +6,7 @@ benchmarks.)
 
 ## Installation
 
-Leiningen coordinates: `[stringer "0.1.2"]`
+Leiningen coordinates: `[stringer "0.2.0"]`
 
 
 ## Usage
@@ -35,6 +35,18 @@ the remaining arguments.
 (s/strdel ", " "foo" :bar 707 nil 'baz)
 => "foo, :bar, 707, , baz"
 ```
+
+### Formatting string
+
+`strfmt` is a macro that accepts format-string as first argument, and format
+parameters as arguments.
+
+```clojure
+(s/strfmt "Hello %s, here are %d products costing %f each." "human" 42 23.35)
+=> "Hello human, here are 42 products costing 23.35 each."
+```
+
+Note: Only limited format-specifier support exists. See [CHANGES.md](CHANGES.md) for details.
 
 ### Work with [java.lang.StringBuilder](https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html)
 
@@ -81,7 +93,9 @@ With Clojure 1.6: `lein with-profile c16,dev do clean, test :perf`
 
 With Clojure 1.7: `lein with-profile c17,dev do clean, test :perf`
 
-To run with both Clojure 1.6 and 1.7 in order: `lein cascade perf`
+With Clojure 1.8: `lein with-profile c18,dev do clean, test :perf`
+
+To run with both Clojure 1.6, 1.7 and 1.8 in order: `lein cascade perf`
 
 _If you are running the tests on a laptop, connect it to the power supply (so that the CPU is not clocked down) and
 turn the screensaver/suspend off._
@@ -89,7 +103,7 @@ turn the screensaver/suspend off._
 
 ## License
 
-Copyright © 2015 Shantanu Kumar (kumar.shantanu@gmail.com, shantanu.kumar@concur.com)
+Copyright © 2015-2016 Shantanu Kumar (kumar.shantanu@gmail.com, shantanu.kumar@concur.com)
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
