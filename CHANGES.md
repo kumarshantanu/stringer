@@ -1,8 +1,11 @@
-# Changelog
+# stringer release changelog
 
 ## TODO
 
-- If args to `strfmt` are literals then directly `.append` them without `nil` check
+- [TODO] If args to `strfmt` are literals then directly `.append` them without `nil` check
+- [TODO] Fix `strfmt` to support the default width qualifier for `%f`
+- [TODO] Efficiently repeat a string: `repstr`
+- [TODO] Efficiently repeat a character: `repchar`
 
 
 ## 0.2.0 / 2016-April-21
@@ -27,4 +30,3 @@
 
 - New macro `strcat` for faster string concatenation than `clojure.core/str`
 - New macro `strdel` for faster string joining than `clojure.string/join`
-
