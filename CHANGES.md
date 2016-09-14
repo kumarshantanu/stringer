@@ -3,6 +3,10 @@
 ## TODO
 
 - [TODO] If args to `strfmt` are literals then directly `.append` them without `nil` check
+
+
+## 0.3.0 / 2016-September-??
+
 - [TODO] Fix `strfmt` to support the default width qualifier for `%f`
 - [TODO] Efficiently repeat a string: `repstr`
 - [TODO] Efficiently repeat a character: `repchar`
