@@ -10,6 +10,7 @@
 - [TODO] Fix `strfmt` to support the default width qualifier for `%f`
 - [TODO] Efficiently repeat a string: `repstr`
 - [TODO] Efficiently repeat a character: `repchar`
+- [TODO] Efficient `print-table` implementation
 
 
 ## 0.2.0 / 2016-April-21
