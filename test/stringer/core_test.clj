@@ -1,7 +1,9 @@
 (ns stringer.core-test
   (:require
     [clojure.test :refer :all]
-    [stringer.core :as s]))
+    [clojure.pprint :as pp]
+    [clojure.string :as string]
+    [stringer.core  :as s]))
 
 
 (deftest test-with-obj-str
@@ -119,3 +121,35 @@
   (testing "multi-args"
     (is (= (format "Customer: %s, Orders: %d for this month." "XYZ Corp" 13)
           (stringer.core/strfmt "Customer: %s, Orders: %d for this month." "XYZ Corp" 13)))))
+
+
+(deftest test-repchar
+  (testing "happy cases"
+    (is (= (string/join (repeat 0 \-)) (stringer.core/repchar 0 \-)))
+    (is (= (string/join (repeat -4 \-)) (stringer.core/repchar -4 \-)))
+    (is (= (string/join (repeat 10 \-)) (stringer.core/repchar 10 \-))))
+  (testing "bad input"
+    (is (thrown? NullPointerException
+          (stringer.core/repchar 10 nil)))
+    (is (thrown? ClassCastException
+          (stringer.core/repchar 10 :foo)))))
+
+
+(deftest test-repstr
+  (testing "happy cases"
+    (is (= (string/join (repeat 0 :foo)) (stringer.core/repstr 0 :foo)))
+    (is (= (string/join (repeat -4 :foo)) (stringer.core/repstr -4 :foo)))
+    (is (= (string/join (repeat 10 nil)) (stringer.core/repstr 10 nil)))
+    (is (= (string/join (repeat 10 "hey")) (stringer.core/repstr 10 "hey")))))
+
+
+(def data
+  [{:name "Eddy"    :age 34 :gender :male   :department :accounts   :active? false}
+   {:name "Heather" :age 42 :gender :female :department :production :active? true}
+   {:name "Sanju"   :age 29 :gender :female :department :hr         :active? true}
+   {:name "Rohit"   :age 23 :gender :male   :department :appdev     :active? true}
+   {:name "Fred"    :age 52 :gender :male   :department :sales      :active? false}])
+
+
+(deftest test-strtbl
+  (is (= (with-out-str (pp/print-table data)) (with-out-str (println (stringer.core/strtbl data))))))

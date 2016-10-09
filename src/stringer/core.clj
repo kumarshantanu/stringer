@@ -178,3 +178,62 @@
               nil (i/expected "either %b, %d, %f, %h, %n, %o, %s or %x" "%")
               (i/expected "either %b, %d, %f, %h, %n, %o, %s or %x" (str \% c2)))
             (recur (subs fmt 1) (conj buf ch) args exps)))))))
+
+
+(defn repchar
+  "Repeat a char given number of times and return the final string."
+  [^long n ch]
+  (if (pos? n)
+    (.replace (String. (char-array n)) (char 0) (char ch))
+    ""))
+
+
+(defn repstr
+  "Repeat a string given number of times and return the final string."
+  [^long n token]
+  (if (pos? n)
+    (if (nil? token)
+      ""
+      (let [^String str-token (if (instance? String token) token (.toString ^Object token))]
+        (with-obj-str [sb (StringBuilder. (unchecked-multiply n (.length str-token)))]
+          (dotimes [_ n]
+            (append! sb str-token)))))
+    ""))
+
+
+(defn strtbl
+  "Return string representation of a textual table. Like clojure.pprint/print-table, but faster and does not print."
+  ([ks rows]
+    (let [^objects
+          karray (object-array ks)
+          kcount (alength karray)
+          rowstr (mapv (fn [m]
+                         (let [^objects cols (object-array kcount)]
+                           (amap cols i r (strcat (get m (aget karray i))))))
+                   rows)
+          ^ints
+          widths (int-array kcount)
+          addrow (fn [^StringBuilder buffer ^String left-token ^String mid-token ^String right-token ^objects cols]
+                   (append! buffer left-token)
+                   (dotimes [i kcount]
+                     (when (pos? i)
+                       (append! buffer mid-token))
+                     (let [^String colstr (aget cols i)]
+                       (append! buffer (repchar (unchecked-subtract (aget widths i) (.length colstr)) \space))
+                       (append! buffer colstr)))
+                   (append! buffer right-token))]
+      ;; set widths
+      (dotimes [i kcount]
+        (aset widths i
+          ^int (apply max (.length ^String (strcat (aget karray i)))
+                 (map #(.length ^String (aget ^objects % i)) rowstr))))
+      ;; build string buffer
+      (with-obj-str buffer
+        ;; add header
+        (addrow buffer "\n| " " | " " |" (amap karray i r (str (aget karray i))))
+        (addrow buffer "\n|-" "-+-" "-|" (object-array (map #(repchar % \-) widths)))
+        ;; add rows
+        (doseq [^objects cols rowstr]
+          (addrow buffer "\n| " " | " " |" cols)))))
+  ([rows]
+    (strtbl (keys (first rows)) rows)))

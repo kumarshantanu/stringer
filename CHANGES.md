@@ -8,9 +8,10 @@
 ## 0.3.0 / 2016-September-??
 
 - [TODO] Fix `strfmt` to support the default width qualifier for `%f`
-- [TODO] Efficiently repeat a string: `repstr`
-- [TODO] Efficiently repeat a character: `repchar`
-- [TODO] Efficient `print-table` implementation
+- [TODO] Fix `strfmt` to accept format-string as non-literal, eval'ed as a string
+- Efficiently repeat a string: `repstr`
+- Efficiently repeat a character: `repchar`
+- Efficient generation of string-representation of a table: `strtbl`
 
 
 ## 0.2.0 / 2016-April-21
