@@ -94,7 +94,7 @@
 
 
 (defmacro strfmt
-  "Format (like clojure.core/format but only %d, %f, %s supported) given string literal with arguments."
+  "Format (like clojure.core/format but only %b, %d, %f, %h, %n, %o, %s, %x supported) given string with arguments."
   [format-str & args]
   (let [format-str (let [fmts (eval format-str)]
                      (i/expected string? "first argument to 'strfmt' to be string at compile time" fmts)
