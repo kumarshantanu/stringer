@@ -96,8 +96,10 @@
 (defmacro strfmt
   "Format (like clojure.core/format but only %d, %f, %s supported) given string literal with arguments."
   [format-str & args]
-  (i/expected string? "first argument to 'strfmt' to be string literal" format-str)
-  (let [sb (gensym "sb-")
+  (let [format-str (let [fmts (eval format-str)]
+                     (i/expected string? "first argument to 'strfmt' to be string at compile time" fmts)
+                     fmts)
+        sb (gensym "sb-")
         conj-str (fn [exps buf]
                    (if (seq buf)
                      (let [^String s (apply str buf)]

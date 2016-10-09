@@ -8,7 +8,7 @@
 ## 0.3.0 / 2016-September-??
 
 - [TODO] Fix `strfmt` to support the default width qualifier for `%f`
-- [TODO] Fix `strfmt` to accept format-string as non-literal, eval'ed as a string
+- Fix #1 `strfmt` to accept format-string as non-literal, eval'ed as a string at compile time
 - Efficiently repeat a string: `repstr`
 - Efficiently repeat a character: `repchar`
 - Efficient generation of string-representation of a table: `strtbl`

@@ -82,6 +82,9 @@
             (stringer.core/strdel ", " one er-keyword ^Object null newline-char false-bool foo-str))))))
 
 
+(def fmt "%s")
+
+
 (deftest test-strfmt
   (testing "no-arg"
     (is (= (format "") (stringer.core/strfmt "")))
@@ -126,7 +129,8 @@
     (is (= (format "%x" nil)   (stringer.core/strfmt "%x" nil)))
     (is (= (format "%X" 1234)  (stringer.core/strfmt "%X" 1234)))
     (is (= (format "%X" nil)   (stringer.core/strfmt "%X" nil)))
-    )
+    ;; var
+    (is (= (format fmt "foo")  (stringer.core/strfmt fmt "foo"))))
   (testing "multi-args"
     (is (= (format "Customer: %s, Orders: %d for this month." "XYZ Corp" 13)
           (stringer.core/strfmt "Customer: %s, Orders: %d for this month." "XYZ Corp" 13)))))
