@@ -3,11 +3,11 @@
 ## TODO
 
 - [TODO] If args to `strfmt` are literals then directly `.append` them without `nil` check
-
-
-## 0.3.0 / 2016-September-??
-
 - [TODO] Fix `strfmt` to support the default width qualifier for `%f`
+
+
+## 0.3.0 / 2016-October-??
+
 - Fix #1 `strfmt` to accept format-string as non-literal, eval'ed as a string at compile time
 - Efficiently repeat a string: `repstr`
 - Efficiently repeat a character: `repchar`
