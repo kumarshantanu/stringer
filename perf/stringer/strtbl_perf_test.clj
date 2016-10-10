@@ -42,12 +42,27 @@
   (concat ten-rows ten-rows))
 
 
-(deftest test-strtbl-perf
-  (testing "1 row"
-    (c/compare-perf "1 row" (with-out-str (pp/print-table one-row)) (stringer.core/strtbl one-row)))
-  (testing "10 rows"
-    (c/compare-perf "10 rows"
+(deftest test-strtbl-str-perf
+  (testing "str 1 row"
+    (c/compare-perf "str-1row" (with-out-str (pp/print-table one-row)) (stringer.core/strtbl one-row)))
+  (testing "str 10 rows"
+    (c/compare-perf "str-10rows"
       (with-out-str (pp/print-table ten-rows)) (stringer.core/strtbl ten-rows)))
-  (testing "20 rows"
-    (c/compare-perf "20 rows"
+  (testing "str 20 rows"
+    (c/compare-perf "str-20rows"
       (with-out-str (pp/print-table twenty-rows)) (stringer.core/strtbl twenty-rows))))
+
+
+(deftest test-strtbl-out-str-perf
+  (testing "out-str 1 row"
+    (c/compare-perf "out-str-1row"
+      (with-out-str (pp/print-table one-row))
+      (with-out-str (println (stringer.core/strtbl one-row)))))
+  (testing "out-str 10 rows"
+    (c/compare-perf "out-str-10rows"
+      (with-out-str (pp/print-table ten-rows))
+      (with-out-str (println (stringer.core/strtbl ten-rows)))))
+  (testing "out-str 20 rows"
+    (c/compare-perf "out-str-20rows"
+      (with-out-str (pp/print-table twenty-rows))
+      (with-out-str (println (stringer.core/strtbl twenty-rows))))))
