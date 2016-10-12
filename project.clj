@@ -1,4 +1,4 @@
-(defproject stringer "0.3.0-SNAPSHOT"
+(defproject stringer "0.3.0"
   :description "Fast string operations for Clojure"
   :url "https://github.com/kumarshantanu/stringer"
   :license {:name "Eclipse Public License"
@@ -21,22 +21,22 @@
                 *assert* true}
   :plugins [[lein-cascade "0.1.2"]]
   :cascade {"test" [["clean"]
-                    ["with-profile" "c15,dev" "test"]
+                    ["with-profile" "c15" "test"]
                     ["clean"]
-                    ["with-profile" "c16,dev" "test"]
+                    ["with-profile" "c16" "test"]
                     ["clean"]
-                    ["with-profile" "c17,dev" "test"]
+                    ["with-profile" "c17" "test"]
                     ["clean"]
-                    ["with-profile" "c18,dev" "test"]
+                    ["with-profile" "c18" "test"]
                     ["clean"]
-                    ["with-profile" "c19,dev" "test"]]
+                    ["with-profile" "c19" "test"]]
             "perf" [["clean"]
-                    ["with-profile" "c15,dev,perf" "test"]
+                    ["with-profile" "c15,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c16,dev,perf" "test"]
+                    ["with-profile" "c16,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c17,dev,perf" "test"]
+                    ["with-profile" "c17,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c18,dev,perf" "test"]
+                    ["with-profile" "c18,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c19,dev,perf" "test"]]})
+                    ["with-profile" "c19,perf" "test"]]})

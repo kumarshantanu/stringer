@@ -6,7 +6,7 @@ benchmarks.)
 
 ## Installation
 
-Leiningen coordinates: `[stringer "0.2.0"]`
+Leiningen coordinates: `[stringer "0.3.0"]`
 
 
 ## Usage
@@ -77,23 +77,36 @@ The local can be bound to something else too:
 => "[1, 2, 3]"
 ```
 
+### Printing tables
+
+The `strtbl` function generates string representation of a textual table equivalent to `clojure.pprint/print-table`.
+
+```clojure
+(println (s/strtbl
+           [{:name "Bill" :age 32 :gender :male}
+            {:name "Anna" :age 47 :gender :female}
+            {:name "Ravi" :age 39 :gender :male}]))
+```
+
+
 ### Caveats
 
 * Stringer uses macros to inline the code. Of course, they cannot be used like functions.
 * If you see exception like this
    `Exception in thread "main" java.lang.IllegalArgumentException: More than one matching method found: append, compiling:(...)`
    Maybe you have `nil` as one of the non type-hinted arguments? Provide a type hint `^Object`.
+* The `strfmt` macro expects the first argument, i.e. the format string, to be a string at compile time.
 
 
 ## Development
 
 ### Running performance benchmarks
 
-With Clojure 1.6: `lein with-profile c16,dev,perf do clean, test`
+With Clojure 1.6: `lein with-profile c16,perf do clean, test`
 
-With Clojure 1.7: `lein with-profile c17,dev,perf do clean, test`
+With Clojure 1.7: `lein with-profile c17,perf do clean, test`
 
-With Clojure 1.8: `lein with-profile c18,dev,perf do clean, test`
+With Clojure 1.8: `lein with-profile c18,perf do clean, test`
 
 To run with both Clojure 1.6, 1.7 and 1.8 in order: `lein cascade perf`
 
