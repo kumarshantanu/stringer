@@ -6,7 +6,7 @@ benchmarks.)
 
 ## Installation
 
-Leiningen coordinates: `[stringer "0.3.0"]`
+Leiningen coordinates: `[stringer "0.3.1"]`
 
 
 ## Usage

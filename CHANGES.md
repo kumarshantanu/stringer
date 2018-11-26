@@ -6,9 +6,9 @@
 - [TODO] Fix `strfmt` to support the default width qualifier for `%f`
 
 
-## [WIP] 0.3.1 / 2018-November-??
+## 0.3.1 / 2018-November-26
 
-- [Todo] Fix unused type hint
+- Fix unused type hint (via #2 by @gzmask - Ray Lei)
 
 
 ## 0.3.0 / 2016-October-13
