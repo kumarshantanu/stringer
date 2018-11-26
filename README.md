@@ -102,13 +102,15 @@ The `strtbl` function generates string representation of a textual table equival
 
 ### Running performance benchmarks
 
-With Clojure 1.6: `lein with-profile c16,perf do clean, test`
+With Clojure 1.6: `lein with-profile c06,perf do clean, test`
 
-With Clojure 1.7: `lein with-profile c17,perf do clean, test`
+With Clojure 1.7: `lein with-profile c07,perf do clean, test`
 
-With Clojure 1.8: `lein with-profile c18,perf do clean, test`
+With Clojure 1.8: `lein with-profile c08,perf do clean, test`
 
-To run with both Clojure 1.6, 1.7 and 1.8 in order: `lein cascade perf`
+With Clojure 1.9: `lein with-profile c09,perf do clean, test`
+
+To run with Clojure 1.6, 1.7, 1.8 and 1.9 in order: `lein cascade perf`
 
 _If you are running the tests on a laptop, connect it to the power supply (so that the CPU is not clocked down) and
 turn the screensaver/suspend off._
@@ -116,7 +118,7 @@ turn the screensaver/suspend off._
 
 ## License
 
-Copyright © 2015-2016 Shantanu Kumar (kumar.shantanu@gmail.com, shantanu.kumar@concur.com)
+Copyright © 2015-2018 Shantanu Kumar (kumar.shantanu@gmail.com, shantanu.kumar@concur.com)
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

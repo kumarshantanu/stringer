@@ -1,19 +1,20 @@
-(defproject stringer "0.3.0"
+(defproject stringer "0.3.1-SNAPSHOT"
   :description "Fast string operations for Clojure"
   :url "https://github.com/kumarshantanu/stringer"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :profiles {:provided {:dependencies [[org.clojure/clojure "1.5.1"]]}
-             :c15 {:dependencies [[org.clojure/clojure "1.5.1"]]}
-             :c16 {:dependencies [[org.clojure/clojure "1.6.0"]]}
-             :c17 {:dependencies [[org.clojure/clojure "1.7.0"]]
+             :c05 {:dependencies [[org.clojure/clojure "1.5.1"]]}
+             :c06 {:dependencies [[org.clojure/clojure "1.6.0"]]}
+             :c07 {:dependencies [[org.clojure/clojure "1.7.0"]]
                    :global-vars {*unchecked-math* :warn-on-boxed}}
-             :c18 {:dependencies [[org.clojure/clojure "1.8.0"]]
+             :c08 {:dependencies [[org.clojure/clojure "1.8.0"]]
                    :global-vars {*unchecked-math* :warn-on-boxed}}
-             :c19 {:dependencies [[org.clojure/clojure "1.9.0-alpha13"]]
+             :c09 {:dependencies [[org.clojure/clojure "1.9.0"]]
                    :global-vars {*unchecked-math* :warn-on-boxed}}
+             :c10 {:dependencies [[org.clojure/clojure "1.10.0-beta8"]]}
              :dlnk {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
-             :perf {:dependencies [[citius "0.2.3"]]
+             :perf {:dependencies [[citius "0.2.4"]]
                     :test-paths ["perf"]
                     :jvm-opts ^:replace ["-server" "-Xms2048m" "-Xmx2048m"]}}
   :jvm-opts ^:replace ["-server" "-Xms2048m" "-Xmx2048m"]
@@ -21,22 +22,27 @@
                 *assert* true}
   :plugins [[lein-cascade "0.1.2"]]
   :cascade {"test" [["clean"]
-                    ["with-profile" "c15" "test"]
+                    ["with-profile" "c05" "test"]
                     ["clean"]
-                    ["with-profile" "c16" "test"]
+                    ["with-profile" "c06" "test"]
                     ["clean"]
-                    ["with-profile" "c17" "test"]
+                    ["with-profile" "c07" "test"]
                     ["clean"]
-                    ["with-profile" "c18" "test"]
+                    ["with-profile" "c08" "test"]
                     ["clean"]
-                    ["with-profile" "c19" "test"]]
+                    ["with-profile" "c09" "test"]
+                    ["clean"]
+                    ["with-profile" "c10" "test"]]
             "perf" [["clean"]
-                    ["with-profile" "c15,perf" "test"]
+                    ["with-profile" "c05,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c16,perf" "test"]
+                    ["with-profile" "c06,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c17,perf" "test"]
+                    ["with-profile" "c07,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c18,perf" "test"]
+                    ["with-profile" "c08,perf" "test"]
                     ["clean"]
-                    ["with-profile" "c19,perf" "test"]]})
+                    ["with-profile" "c09,perf" "test"]
+                    ["clean"]
+                    ["with-profile" "c10,perf" "test"]]})
+
