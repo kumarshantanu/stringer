@@ -6,6 +6,14 @@
 - [TODO] Fix `strfmt` to support the default width qualifier for `%f`
 
 
+## [WIP] 0.4.0 / 2019-April-??
+
+- [Todo] Deprecate `stringer.core/strfmt`
+- [Todo] Fix #3 - Add formatting support with named parameters
+  - [Todo] `nformat` (in-line formatting)
+  - [Todo] `fmt` (fn support for formatting)
+
+
 ## 0.3.1 / 2018-November-26
 
 - Fix unused type hint (via #2 by @gzmask - Ray Lei)

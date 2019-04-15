@@ -1,4 +1,4 @@
-(defproject stringer "0.3.1"
+(defproject stringer "0.4.0-SNAPSHOT"
   :description "Fast string operations for Clojure"
   :url "https://github.com/kumarshantanu/stringer"
   :license {:name "Eclipse Public License"
@@ -45,4 +45,3 @@
                     ["with-profile" "c09,perf" "test"]
                     ["clean"]
                     ["with-profile" "c10,perf" "test"]]})
-
