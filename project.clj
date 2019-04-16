@@ -12,7 +12,7 @@
                    :global-vars {*unchecked-math* :warn-on-boxed}}
              :c09 {:dependencies [[org.clojure/clojure "1.9.0"]]
                    :global-vars {*unchecked-math* :warn-on-boxed}}
-             :c10 {:dependencies [[org.clojure/clojure "1.10.0-beta8"]]}
+             :c10 {:dependencies [[org.clojure/clojure "1.10.1-beta2"]]}
              :dlnk {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
              :perf {:dependencies [[citius "0.2.4"]]
                     :test-paths ["perf"]
