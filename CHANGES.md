@@ -8,6 +8,7 @@
 
 ## [WIP] 0.4.0 / 2019-April-??
 
+- [BREAKING CHANGE] Drop support for Clojure 1.5 and 1.6
 - [Todo] Deprecate `stringer.core/strfmt`
 - [Todo] Fix #3 - Add formatting support with named parameters
   - [Todo] `nformat` (in-line formatting)
