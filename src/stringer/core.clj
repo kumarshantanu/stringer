@@ -256,8 +256,10 @@
   Named parameters are assumed to be local vars unless specified
   in a map argument, eg. {:param \"value\"}."
   ([format-string]
-   (i/expected string? "a format-string" format-string)
-   (let [tokens (->> (i/nparse format-string)
+   (let [tokens (->> (let [fmts (eval format-string)]
+                       (i/expected string? "first argument to 'nformat' to be string at compile time" fmts)
+                       fmts)
+                     i/nparse
                      (mapv (fn [each]
                              (if (keyword? each)
                                (symbol (name each))
@@ -265,7 +267,10 @@
      `(strcat ~@tokens)))
   ([format-string params]
    (i/expected string? "a format-string" format-string)
-   (let [tokens (->> (i/nparse format-string)
+   (let [tokens (->> (let [fmts (eval format-string)]
+                       (i/expected string? "first argument to 'nformat' to be string at compile time" fmts)
+                       fmts)
+                     i/nparse
                      (mapv (fn [each]
                              (if (string? each)
                                each
