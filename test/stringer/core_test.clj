@@ -107,6 +107,8 @@
     (is (= (format "%d" nil)   (stringer.core/strfmt "%d" nil)))
     ;; float
     (is (= (format "%f" 45.67) (stringer.core/strfmt "%f" 45.67)))
+    (is (= (format "%f"
+                   45.6789012) (stringer.core/strfmt "%f" 45.6789012)))
     (is (= (format "%f" nil)   (stringer.core/strfmt "%f" nil)))
     ;; hash code
     (is (= (format "%h" :foo)  (stringer.core/strfmt "%h" :foo)))
@@ -166,3 +168,38 @@
 
 (deftest test-strtbl
   (is (= (with-out-str (pp/print-table data)) (with-out-str (println (stringer.core/strtbl data))))))
+
+
+(deftest test-nformat
+  (testing "named params should be picked from local vars in arity-0"
+    (let [name "Harry"
+          place "Azkaban"]
+      (is (= "Hi Harry, are you from Azkaban?"
+             (stringer.core/nformat "Hi {name}, are you from {place}?"))
+          "regular param values"))
+    (let [^Object name nil
+          ^Object place nil]
+      (is (= "Hi , are you from ?"
+             (stringer.core/nformat "Hi {name}, are you from {place}?"))
+          "nil param values")))
+  (testing "named params should be picked from map argument"
+    (is (= "Hi Harry, are you from Azkaban?"
+           (stringer.core/nformat "Hi {name}, are you from {place}?"
+                                  {:name "Harry" :place "Azkaban"}))
+        "regular param values")
+    (is (= "Hi , are you from ?"
+           (stringer.core/nformat "Hi {name}, are you from {place}?"
+                                  {:name nil :place nil}))
+        "nil param values")))
+
+
+(def fmt-str "Hi {name}, are you from {place}?")
+
+
+(deftest test-fmt
+  (let [f1 (stringer.core/fmt "Hi {name}, are you from {place}?")
+        f2 (stringer.core/fmt fmt-str)]
+    (is (= "Hi Harry, are you from Azkaban?"
+           (f1 {:name "Harry" :place "Azkaban"})))
+    (is (= "Hi Harry, are you from Azkaban?"
+           (f2 {:name "Harry" :place "Azkaban"})))))

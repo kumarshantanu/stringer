@@ -138,10 +138,25 @@
                                                                          "null"
                                                                          (long arg#))))))
               \f  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
-                                                       `(.append ~sb (let [arg# ~(head-arg args)]
-                                                                       (if (nil? arg#)
-                                                                         "null"
-                                                                         (double arg#))))))
+                                                               `(let [arg# ~(head-arg args)]
+                                                                  (if (nil? arg#)
+                                                                    (.append ~sb "null")
+                                                                    (let [s# (String/valueOf (double arg#))
+                                                                          n# (.length s#)
+                                                                          i# (.indexOf s# ~(int \.))
+                                                                          d# (-> (unchecked-subtract n# i#)
+                                                                                 unchecked-dec)]
+                                                                      (if (< d# 6)
+                                                                        (do
+                                                                          (.append ~sb s#)
+                                                                          (case d#
+                                                                            1 (.append ~sb "00000")
+                                                                            2 (.append ~sb "0000")
+                                                                            3 (.append ~sb "000")
+                                                                            4 (.append ~sb "00")
+                                                                            5 (.append ~sb "0")))
+                                                                        (.append ~sb s# 0 (-> (unchecked-subtract n# d#)
+                                                                                              (unchecked-add 6)))))))))
               \H  (recur (subs fmt 2) [] (next args) (conj-exp exps buf
                                                        `(.append ~sb (let [arg# ~(head-arg args)]
                                                                                (if (nil? arg#)
@@ -249,3 +264,46 @@
           (addrow buffer "\n| " " | " " |" cols)))))
   ([rows]
     (strtbl (keys (first rows)) rows)))
+
+
+(defmacro nformat
+  "Render a format-string having named parameters in {param} form.
+  Named parameters are assumed to be local vars unless specified
+  in a map argument, eg. {:param \"value\"}."
+  ([format-string]
+   (let [tokens (->> (let [fmts (eval format-string)]
+                       (i/expected string? "first argument to 'nformat' to be string at compile time" fmts)
+                       fmts)
+                     i/nparse
+                     (mapv (fn [each]
+                             (if (keyword? each)
+                               (symbol (name each))
+                               each))))]
+     `(strcat ~@tokens)))
+  ([format-string params]
+   (i/expected string? "a format-string" format-string)
+   (let [tokens (->> (let [fmts (eval format-string)]
+                       (i/expected string? "first argument to 'nformat' to be string at compile time" fmts)
+                       fmts)
+                     i/nparse
+                     (mapv (fn [each]
+                             (if (string? each)
+                               each
+                               `(get ~params ~each)))))]
+     `(strcat ~@tokens))))
+
+
+(defmacro fmt
+  "Make a function that renders given format-string."
+  [format-string]
+  (let [params (gensym)
+        tokens (->> (let [fmts (eval format-string)]
+                      (i/expected string? "first argument to 'fmt' to be string at compile time" fmts)
+                      fmts)
+                    i/nparse
+                    (mapv (fn [each]
+                            (if (string? each)
+                              each
+                              `(get ~params ~each)))))]
+    `(fn [~params]
+       (strcat ~@tokens))))

@@ -6,7 +6,7 @@ benchmarks.)
 
 ## Installation
 
-Leiningen coordinates: `[stringer "0.3.1"]`
+Leiningen coordinates: `[stringer "0.4.0-SNAPSHOT"]`
 
 
 ## Usage
@@ -38,15 +38,47 @@ the remaining arguments.
 
 ### Formatting string
 
+#### Positional parameters
+
 `strfmt` is a macro that accepts format-string as first argument, and format
 parameters as arguments.
 
 ```clojure
 (s/strfmt "Hello %s, here are %d products costing %f each." "human" 42 23.35)
-=> "Hello human, here are 42 products costing 23.35 each."
+=> "Hello human, here are 42 products costing 23.350000 each."
 ```
 
 Note: Only limited format-specifier support exists. See [CHANGES.md](CHANGES.md) for details.
+
+#### Named parameters
+
+`nformat` is a macro that accepts format-string as first argument, and format
+parameters as local vars or map argument.
+
+```clojure
+(let [guest "human"
+      nprod 42
+      pcost 23.35]
+  (s/nformat "Hello {guest}, here are {nprod} products costing {pcost} each."))
+=> "Hello human, here are 42 products costing 23.35 each."
+;; OR
+(s/nformat "Hello {guest}, here are {nprod} products costing {pcost} each."
+           {:guest "human"
+            :nprod 42
+            :pcost 23.35})
+=> "Hello human, here are 42 products costing 23.35 each."
+```
+
+The `fmt` macro, on the other hand, prepares a function to render a
+format-string at a later point.
+
+```clojure
+(def x (s/fmt "Hello {guest}, here are {nprod} products costing {pcost} each."))
+(x {:guest "human"
+    :nprod 42
+    :pcost 23.35})
+=> "Hello human, here are 42 products costing 23.35 each."
+```
 
 ### Work with [java.lang.StringBuilder](https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html)
 
@@ -102,15 +134,13 @@ The `strtbl` function generates string representation of a textual table equival
 
 ### Running performance benchmarks
 
-With Clojure 1.6: `lein with-profile c06,perf do clean, test`
-
-With Clojure 1.7: `lein with-profile c07,perf do clean, test`
-
 With Clojure 1.8: `lein with-profile c08,perf do clean, test`
 
 With Clojure 1.9: `lein with-profile c09,perf do clean, test`
 
-To run with Clojure 1.6, 1.7, 1.8 and 1.9 in order: `lein cascade perf`
+With Clojure 1.10: `lein with-profile c10,perf do clean, test`
+
+To run with Clojure 1.8, 1.9 and 1.10 in order: `lein cascade perf`
 
 _If you are running the tests on a laptop, connect it to the power supply (so that the CPU is not clocked down) and
 turn the screensaver/suspend off._
@@ -118,7 +148,7 @@ turn the screensaver/suspend off._
 
 ## License
 
-Copyright © 2015-2018 Shantanu Kumar (kumar.shantanu@gmail.com, shantanu.kumar@concur.com)
+Copyright © 2015-2019 Shantanu Kumar
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
