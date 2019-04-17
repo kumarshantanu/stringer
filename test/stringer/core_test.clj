@@ -191,26 +191,13 @@
         "nil param values")))
 
 
+(def fmt-str "Hi {name}, are you from {place}?")
+
+
 (deftest test-fmt
-  (let [ft "Hi {name}, are you from {place}?"
-        f1 (stringer.core/fmt "Hi {name}, are you from {place}?")
-        f2 (stringer.core/fmt ft)]
+  (let [f1 (stringer.core/fmt "Hi {name}, are you from {place}?")
+        f2 (stringer.core/fmt fmt-str)]
     (is (= "Hi Harry, are you from Azkaban?"
            (f1 {:name "Harry" :place "Azkaban"})))
     (is (= "Hi Harry, are you from Azkaban?"
            (f2 {:name "Harry" :place "Azkaban"})))))
-
-
-(stringer.core/defmt fmt-1 "Hi {name}, are you from {place}?")
-(stringer.core/defmt fmt-2 "Name-place formatter" "Hi {name}, are you from {place}?")
-(def fmt-str-1 "Hi {name}, are you from {place}?")
-(stringer.core/defmt fmt-3 fmt-str-1)
-
-
-(deftest test-defmt
-  (is (= "Hi Harry, are you from Azkaban?"
-         (fmt-1 {:name "Harry" :place "Azkaban"})))
-  (is (= "Hi Harry, are you from Azkaban?"
-         (fmt-2 {:name "Harry" :place "Azkaban"})))
-  (is (= "Hi Harry, are you from Azkaban?"
-         (fmt-3 {:name "Harry" :place "Azkaban"}))))

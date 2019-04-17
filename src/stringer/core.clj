@@ -281,37 +281,14 @@
 (defmacro fmt
   "Make a function that renders given format-string."
   [format-string]
-  (if (string? format-string)
-    (let [params (gensym)
-          tokens (->> (i/nparse format-string)
-                      (mapv (fn [each]
-                              (if (string? each)
-                                each
-                                `(get ~params ~each)))))]
-      `(fn [~params]
-         (strcat ~@tokens)))
-    `(let [fmtext# ~format-string
-           ncount# (count fmtext#)
-           tokens# (i/nparse fmtext#)]
-       (fn [params#]
-         (with-obj-str [sb# (StringBuilder. ncount#)]
-           (doseq [each# tokens#]
-             (if (string? each#)
-               (append! sb# each#)
-               (append! sb# (get params# each#)))))))))
-
-
-(defmacro defmt
-  "Define a function that renders given format-string."
-  ([var-sym format-string]
-   `(defmt ~var-sym
-      ~(str "Formatter for " (pr-str (if (symbol? format-string)
-                                       (eval format-string)
-                                       format-string)))
-      ~format-string))
-  ([var-sym docstring format-string]
-   (i/expected symbol? "a symbol" var-sym)
-   (i/expected string? "a docstring" docstring)
-   (let [fs (eval format-string)]
-     (i/expected string? "a format string" fs)
-     `(def ~var-sym ~docstring (fmt ~fs)))))
+  (let [params (gensym)
+        tokens (->> (let [fmts (eval format-string)]
+                      (i/expected string? "first argument to 'fmt' to be string at compile time" fmts)
+                      fmts)
+                    i/nparse
+                    (mapv (fn [each]
+                            (if (string? each)
+                              each
+                              `(get ~params ~each)))))]
+    `(fn [~params]
+       (strcat ~@tokens))))

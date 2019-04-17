@@ -13,7 +13,6 @@
 - Fix #3 - Add formatting support with named parameters
   - `nformat` (in-line formatting)
   - `fmt`     (fn support for formatting)
-  - `defmt`   (var definition for formatting)
 
 
 ## 0.3.1 / 2018-November-26
