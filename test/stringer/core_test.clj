@@ -107,6 +107,8 @@
     (is (= (format "%d" nil)   (stringer.core/strfmt "%d" nil)))
     ;; float
     (is (= (format "%f" 45.67) (stringer.core/strfmt "%f" 45.67)))
+    (is (= (format "%f"
+                   45.6789012) (stringer.core/strfmt "%f" 45.6789012)))
     (is (= (format "%f" nil)   (stringer.core/strfmt "%f" nil)))
     ;; hash code
     (is (= (format "%h" :foo)  (stringer.core/strfmt "%h" :foo)))

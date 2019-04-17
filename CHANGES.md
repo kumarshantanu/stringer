@@ -3,13 +3,13 @@
 ## TODO
 
 - [TODO] If args to `strfmt` are literals then directly `.append` them without `nil` check
-- [TODO] Fix `strfmt` to support the default width qualifier for `%f`
+- [Todo] Fix symbol hinting for `nil` values in `append!`
 
 
 ## [WIP] 0.4.0 / 2019-April-??
 
 - [BREAKING CHANGE] Drop support for Clojure 1.5 and 1.6
-- [Todo] Fix symbol hinting for `nil` values in `append!`
+- Fix `strfmt` to support the default width qualifier for `%f`
 - Fix #3 - Add formatting support with named parameters
   - `nformat` (in-line formatting)
   - `fmt`     (fn support for formatting)
