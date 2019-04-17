@@ -6,7 +6,7 @@
 - [Todo] Fix symbol hinting for `nil` values in `append!`
 
 
-## [WIP] 0.4.0 / 2019-April-??
+## 0.4.0 / 2019-April-17
 
 - [BREAKING CHANGE] Drop support for Clojure 1.5 and 1.6
 - Fix `strfmt` to support the default width qualifier for `%f`

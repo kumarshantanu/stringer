@@ -6,7 +6,7 @@ benchmarks.)
 
 ## Installation
 
-Leiningen coordinates: `[stringer "0.4.0-SNAPSHOT"]`
+Leiningen coordinates: `[stringer "0.4.0"]`
 
 
 ## Usage
