@@ -9,10 +9,11 @@
 ## [WIP] 0.4.0 / 2019-April-??
 
 - [BREAKING CHANGE] Drop support for Clojure 1.5 and 1.6
-- [Todo] Deprecate `stringer.core/strfmt`
-- [Todo] Fix #3 - Add formatting support with named parameters
-  - [Todo] `nformat` (in-line formatting)
-  - [Todo] `fmt` (fn support for formatting)
+- [Todo] Fix symbol hinting for `nil` values in `append!`
+- Fix #3 - Add formatting support with named parameters
+  - `nformat` (in-line formatting)
+  - `fmt`     (fn support for formatting)
+  - `defmt`   (var definition for formatting)
 
 
 ## 0.3.1 / 2018-November-26

@@ -249,3 +249,64 @@
           (addrow buffer "\n| " " | " " |" cols)))))
   ([rows]
     (strtbl (keys (first rows)) rows)))
+
+
+(defmacro nformat
+  "Render a format-string having named parameters in {param} form.
+  Named parameters are assumed to be local vars unless specified
+  in a map argument, eg. {:param \"value\"}."
+  ([format-string]
+   (i/expected string? "a format-string" format-string)
+   (let [tokens (->> (i/nparse format-string)
+                     (mapv (fn [each]
+                             (if (keyword? each)
+                               (symbol (name each))
+                               each))))]
+     `(strcat ~@tokens)))
+  ([format-string params]
+   (i/expected string? "a format-string" format-string)
+   (let [tokens (->> (i/nparse format-string)
+                     (mapv (fn [each]
+                             (if (string? each)
+                               each
+                               `(get ~params ~each)))))]
+     `(strcat ~@tokens))))
+
+
+(defmacro fmt
+  "Make a function that renders given format-string."
+  [format-string]
+  (if (string? format-string)
+    (let [params (gensym)
+          tokens (->> (i/nparse format-string)
+                      (mapv (fn [each]
+                              (if (string? each)
+                                each
+                                `(get ~params ~each)))))]
+      `(fn [~params]
+         (strcat ~@tokens)))
+    `(let [fmtext# ~format-string
+           ncount# (count fmtext#)
+           tokens# (i/nparse fmtext#)]
+       (fn [params#]
+         (with-obj-str [sb# (StringBuilder. ncount#)]
+           (doseq [each# tokens#]
+             (if (string? each#)
+               (append! sb# each#)
+               (append! sb# (get params# each#)))))))))
+
+
+(defmacro defmt
+  "Define a function that renders given format-string."
+  ([var-sym format-string]
+   `(defmt ~var-sym
+      ~(str "Formatter for " (pr-str (if (symbol? format-string)
+                                       (eval format-string)
+                                       format-string)))
+      ~format-string))
+  ([var-sym docstring format-string]
+   (i/expected symbol? "a symbol" var-sym)
+   (i/expected string? "a docstring" docstring)
+   (let [fs (eval format-string)]
+     (i/expected string? "a format string" fs)
+     `(def ~var-sym ~docstring (fmt ~fs)))))

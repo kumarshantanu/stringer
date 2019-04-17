@@ -166,3 +166,51 @@
 
 (deftest test-strtbl
   (is (= (with-out-str (pp/print-table data)) (with-out-str (println (stringer.core/strtbl data))))))
+
+
+(deftest test-nformat
+  (testing "named params should be picked from local vars in arity-0"
+    (let [name "Harry"
+          place "Azkaban"]
+      (is (= "Hi Harry, are you from Azkaban?"
+             (stringer.core/nformat "Hi {name}, are you from {place}?"))
+          "regular param values"))
+    (let [^Object name nil
+          ^Object place nil]
+      (is (= "Hi , are you from ?"
+             (stringer.core/nformat "Hi {name}, are you from {place}?"))
+          "nil param values")))
+  (testing "named params should be picked from map argument"
+    (is (= "Hi Harry, are you from Azkaban?"
+           (stringer.core/nformat "Hi {name}, are you from {place}?"
+                                  {:name "Harry" :place "Azkaban"}))
+        "regular param values")
+    (is (= "Hi , are you from ?"
+           (stringer.core/nformat "Hi {name}, are you from {place}?"
+                                  {:name nil :place nil}))
+        "nil param values")))
+
+
+(deftest test-fmt
+  (let [ft "Hi {name}, are you from {place}?"
+        f1 (stringer.core/fmt "Hi {name}, are you from {place}?")
+        f2 (stringer.core/fmt ft)]
+    (is (= "Hi Harry, are you from Azkaban?"
+           (f1 {:name "Harry" :place "Azkaban"})))
+    (is (= "Hi Harry, are you from Azkaban?"
+           (f2 {:name "Harry" :place "Azkaban"})))))
+
+
+(stringer.core/defmt fmt-1 "Hi {name}, are you from {place}?")
+(stringer.core/defmt fmt-2 "Name-place formatter" "Hi {name}, are you from {place}?")
+(def fmt-str-1 "Hi {name}, are you from {place}?")
+(stringer.core/defmt fmt-3 fmt-str-1)
+
+
+(deftest test-defmt
+  (is (= "Hi Harry, are you from Azkaban?"
+         (fmt-1 {:name "Harry" :place "Azkaban"})))
+  (is (= "Hi Harry, are you from Azkaban?"
+         (fmt-2 {:name "Harry" :place "Azkaban"})))
+  (is (= "Hi Harry, are you from Azkaban?"
+         (fmt-3 {:name "Harry" :place "Azkaban"}))))

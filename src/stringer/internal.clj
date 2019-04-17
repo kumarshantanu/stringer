@@ -42,3 +42,41 @@
 
 
 (def ^String line-separator (System/getProperty "line.separator"))
+
+
+(defn nparse
+  "Parse given format-string containing named parameters,
+  returning string and param-key tokens.
+
+  Example: (nparse \"{name}-{age}\") ==> [:name \"-\" :age]"
+  [template]
+  (let [n           (count template)
+        update-last (fn [tokens f] (update tokens (dec (count tokens)) f))
+        suffix-last (fn [tokens suffix] (update-last tokens #(str % suffix)))
+        update-many (fn [m kf-map] (reduce-kv (fn [m k v] (assoc m k (if (contains? kf-map k)
+                                                                       ((get kf-map k) v)
+                                                                       v)))
+                                              {} m))]
+    (loop [index 0
+           state {:escape? false
+                  :in-key? false
+                  :tokens  [""]}]
+      (if (>= index n)
+        (:tokens state)
+        (let [each (get template index)
+              j    (unchecked-inc index)]
+          (cond
+            (:escape? state) (recur j (update-many state {:escape? (fn [_] false)
+                                                          :tokens  #(suffix-last % each)}))
+            (:in-key? state) (case each
+                               \\ (throw (ex-info "Cannot use escape \\ inside a param name"
+                                                  {:bad-char each}))
+                               \} (recur j (update-many state {:in-key? (fn [_] false)
+                                                               :tokens  #(-> %
+                                                                             (update-last keyword)
+                                                                             (conj ""))}))
+                               (recur j (update state :tokens suffix-last each)))
+            (= \{ each)      (recur j (update-many state {:in-key? (fn [_] true)
+                                                          :tokens  #(conj % "")}))
+            (= \\ each)      (recur j (assoc state :escape? true))
+            :otherwise       (recur j (update state :tokens suffix-last each))))))))
