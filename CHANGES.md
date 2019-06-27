@@ -6,6 +6,11 @@
 - [Todo] Fix symbol hinting for `nil` values in `append!`
 
 
+## [WIP] 0.4.1 / 2019-June-??
+
+- [Todo] Add `nrender` fn to format string (non-literal) with named-parameters
+
+
 ## 0.4.0 / 2019-April-17
 
 - [BREAKING CHANGE] Drop support for Clojure 1.5 and 1.6
