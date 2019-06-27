@@ -184,12 +184,14 @@
           "nil param values")))
   (testing "named params should be picked from map argument"
     (is (= "Hi Harry, are you from Azkaban?"
-           (stringer.core/nformat "Hi {name}, are you from {place}?"
-                                  {:name "Harry" :place "Azkaban"}))
+           (stringer.core/nformat "Hi {name}, are you from {place}?" {:name "Harry" :place "Azkaban"})
+           (let [format-string-lv "Hi {name}, are you from {place}?"]
+             (stringer.core/nrender format-string-lv {:name "Harry" :place "Azkaban"})))
         "regular param values")
     (is (= "Hi , are you from ?"
-           (stringer.core/nformat "Hi {name}, are you from {place}?"
-                                  {:name nil :place nil}))
+           (stringer.core/nformat "Hi {name}, are you from {place}?" {:name nil :place nil})
+           (let [format-string-lv "Hi {name}, are you from {place}?"]
+             (stringer.core/nrender format-string-lv {:name nil :place nil})))
         "nil param values")))
 
 

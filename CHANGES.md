@@ -8,7 +8,7 @@
 
 ## [WIP] 0.4.1 / 2019-June-??
 
-- [Todo] Add `nrender` fn to format string (non-literal) with named-parameters
+- Add `nrender` fn to format string (non-literal) with named-parameters
 
 
 ## 0.4.0 / 2019-April-17

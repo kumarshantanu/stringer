@@ -293,6 +293,25 @@
      `(strcat ~@tokens))))
 
 
+(defn nrender
+  "Render format-tokens or format-string having named parameters in {param} form. Like `nformat`, but slower and can
+  handle non-literal format string."
+  [format-tokens-or-string params]
+  (as-> format-tokens-or-string $
+    (cond
+      (string? $) (i/nparse $)
+      (vector? $) $
+      :otherwise  (i/expected "format-tokens or format-string" $))
+    (with-obj-str [^StringBuilder sb (StringBuilder. (count $))]
+      (run! (fn [token] (if (string? token)
+                          (.append sb ^String token)
+                          (when-some [value (get params token)]
+                            (if (string? value)
+                              (.append sb ^String value)
+                              (.append sb ^Object value)))))
+        $))))
+
+
 (defmacro fmt
   "Make a function that renders given format-string."
   [format-string]
