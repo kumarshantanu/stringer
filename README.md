@@ -6,7 +6,7 @@ benchmarks.)
 
 ## Installation
 
-Leiningen coordinates: `[stringer "0.4.0"]`
+Leiningen coordinates: `[stringer "0.4.1"]`
 
 
 ## Usage
@@ -66,6 +66,17 @@ parameters as local vars or map argument.
            {:guest "human"
             :nprod 42
             :pcost 23.35})
+=> "Hello human, here are 42 products costing 23.35 each."
+```
+
+In case you need a function variant of `nformat` you can use `nrender`, which is a little slower but handles
+non-literal format string.
+
+```clojure
+(let [format-string "Hello {guest}, here are {nprod} products costing {pcost} each."]
+  (s/nrender format-string {:guest "human"
+                            :nprod 42
+                            :pcost 23.35}))
 => "Hello human, here are 42 products costing 23.35 each."
 ```
 

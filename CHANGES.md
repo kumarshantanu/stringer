@@ -6,7 +6,7 @@
 - [Todo] Fix symbol hinting for `nil` values in `append!`
 
 
-## [WIP] 0.4.1 / 2019-June-??
+## 0.4.1 / 2019-June-27
 
 - Add `nrender` fn to format string (non-literal) with named-parameters
 
