@@ -34,9 +34,15 @@
   "Append all arguments to the StringBuilder instance."
   [holder & args]
   (let [each-append (fn [x]
-                      `(let [x# ~x]
-                         (when-not (nil? x#)  ; NULL doesn't work with StringBuilder
-                           (.append ~holder x#))))
+                      (cond
+                        (or (symbol? x)
+                            (and (sequential? x) (not (vector? x)))) ;; Symbol or expression
+                        `(let [x# ~x]
+                           (when-not (nil? x#)  ; NULL doesn't work with StringBuilder
+                             (.append ~holder x#)))
+                        (nil? x) ()
+                        (i/stringable? x) `(.append ~holder ~(str x)) ;; Can call toString at compile time
+                        :else `(.append ~holder ~x))) ;; Find out at run time
         all-appends (->> args
                       (remove nil?)
                       i/precompile
